@@ -1,0 +1,207 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FARGO3D Integration &mdash; jax-disk2D 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="PINN Training" href="pinn_training.html" />
+    <link rel="prev" title="Getting Started" href="getting_started.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            jax-disk2D
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">FARGO3D Integration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#getting-fargo3d">Getting FARGO3D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compiling-fargo3d">Compiling FARGO3D</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#gpu-compilation">GPU Compilation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#running-simulations">Running Simulations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#default-fargo2-setup">Default fargo2 Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#customizing-parameters">Customizing Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-files">Configuration Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#converting-output">Converting Output</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#output-files">Output Files</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pinn_training.html">PINN Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_reference.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">jax-disk2D</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">FARGO3D Integration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/fargo_integration.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="fargo3d-integration">
+<h1>FARGO3D Integration<a class="headerlink" href="#fargo3d-integration" title="Link to this heading"></a></h1>
+<p>jax-disk2D integrates with FARGO3D for generating training data. This section covers how to set up, compile, and run FARGO3D simulations.</p>
+<section id="getting-fargo3d">
+<h2>Getting FARGO3D<a class="headerlink" href="#getting-fargo3d" title="Link to this heading"></a></h2>
+<p>Download the FARGO3D sources using Guild AI:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>guild<span class="w"> </span>run<span class="w"> </span>fargo:get_fargo
+</pre></div>
+</div>
+<p>This will clone the FARGO3D repository into a <code class="docutils literal notranslate"><span class="pre">fargo3d/</span></code> directory.</p>
+</section>
+<section id="compiling-fargo3d">
+<h2>Compiling FARGO3D<a class="headerlink" href="#compiling-fargo3d" title="Link to this heading"></a></h2>
+<p>Compile FARGO3D with a specific configuration:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>guild<span class="w"> </span>run<span class="w"> </span>fargo:setup<span class="w"> </span>@fargo_make.yml
+</pre></div>
+</div>
+<section id="gpu-compilation">
+<h3>GPU Compilation<a class="headerlink" href="#gpu-compilation" title="Link to this heading"></a></h3>
+<p>To run simulations on GPU(s), you need to:</p>
+<ol class="arabic simple">
+<li><p>Compile on a <strong>GPU node</strong> with CUDA loaded</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">GPU=1</span></code> in your configuration</p></li>
+<li><p>Ensure CUDA modules are loaded</p></li>
+</ol>
+<p>Example for Compute Canada:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module<span class="w"> </span>load<span class="w"> </span>cuda
+guild<span class="w"> </span>run<span class="w"> </span>fargo:setup<span class="w"> </span>@fargo_make.yml<span class="w"> </span><span class="nv">GPU</span><span class="o">=</span><span class="m">1</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="running-simulations">
+<h2>Running Simulations<a class="headerlink" href="#running-simulations" title="Link to this heading"></a></h2>
+<section id="default-fargo2-setup">
+<h3>Default fargo2 Setup<a class="headerlink" href="#default-fargo2-setup" title="Link to this heading"></a></h3>
+<p>Run a default fargo2 simulation:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>guild<span class="w"> </span>run<span class="w"> </span>fargo:run<span class="w"> </span>@fargo2_run.yml
+</pre></div>
+</div>
+</section>
+<section id="customizing-parameters">
+<h3>Customizing Parameters<a class="headerlink" href="#customizing-parameters" title="Link to this heading"></a></h3>
+<p>You can override parameters when running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>guild<span class="w"> </span>run<span class="w"> </span>fargo:run<span class="w"> </span>@fargo2_run.yml<span class="w"> </span><span class="nv">Ntot</span><span class="o">=</span><span class="m">100</span>
+</pre></div>
+</div>
+<p>This changes the number of orbits to 5 (assuming default time step).</p>
+</section>
+</section>
+<section id="configuration-files">
+<h2>Configuration Files<a class="headerlink" href="#configuration-files" title="Link to this heading"></a></h2>
+<p>FARGO3D uses several configuration files:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fargo2_run.yml</span></code>: Default fargo2 setup configuration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fargo_run.yml</span></code>: Alternative setup configuration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fargo_make.yml</span></code>: Compilation configuration</p></li>
+</ul>
+</section>
+<section id="converting-output">
+<h2>Converting Output<a class="headerlink" href="#converting-output" title="Link to this heading"></a></h2>
+<p>Convert FARGO3D output to xarray format for PINN training:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>guild<span class="w"> </span>run<span class="w"> </span>fargo:to_xarray<span class="w"> </span><span class="nv">run</span><span class="o">=</span>&lt;run_job_id&gt;
+</pre></div>
+</div>
+<p>This creates NetCDF files (<code class="docutils literal notranslate"><span class="pre">.nc</span></code>) and NumPy arrays (<code class="docutils literal notranslate"><span class="pre">.npz</span></code>) that can be used for training.</p>
+<section id="output-files">
+<h3>Output Files<a class="headerlink" href="#output-files" title="Link to this heading"></a></h3>
+<p>The conversion process creates:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">test_data.npz</span></code>: Training data in NumPy format</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_dens.nc</span></code>: Density field in NetCDF format</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_vx.nc</span></code>: Radial velocity in NetCDF format</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_vy.nc</span></code>: Azimuthal velocity in NetCDF format</p></li>
+</ul>
+<p>These files are automatically linked to PINN training operations.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="getting_started.html" class="btn btn-neutral float-left" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pinn_training.html" class="btn btn-neutral float-right" title="PINN Training" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Shunyuan Mao, Weiqi Wang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
