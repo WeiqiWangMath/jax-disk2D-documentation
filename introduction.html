@@ -45,9 +45,11 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-are-physics-informed-neural-networks">What are Physics-Informed Neural Networks?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#key-features">Key Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#what-is-a-pinn">What is a PINN?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scientific-impact">Scientific Impact</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#project-structure">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reference">Reference</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
@@ -83,40 +85,55 @@
              
   <section id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h1>
-<p>jax-disk2D is a Python package for solving 2D disk hydrodynamics problems using Physics-Informed Neural Networks (PINNs) with JAX. The package integrates with FARGO3D for generating training data and provides a complete workflow for training and evaluating PINN models.</p>
+<p>jax-disk2D is a Python package that implements Physics-Informed Neural Networks (PINNs) for solving two-dimensional, time-dependent hydrodynamics of non-self-gravitating accretion disks. This package provides the first demonstration of PINNs as surrogate solvers for accretion disk dynamics, enabling physics-driven, data-free modeling of complex astrophysical systems.</p>
+<p>Accretion disks are ubiquitous in astrophysics, appearing in diverse environments from planet-forming protoplanetary disks to X-ray binaries and active galactic nuclei. Traditional modeling of their dynamics requires computationally intensive (magneto)hydrodynamic simulations, often demanding millions of CPU hours for a single run. As observational capabilities continue to advance—particularly with facilities like the Atacama Large Millimeter/submillimeter Array (ALMA)—the need for faster and more flexible modeling techniques becomes increasingly urgent.</p>
+<section id="what-are-physics-informed-neural-networks">
+<h2>What are Physics-Informed Neural Networks?<a class="headerlink" href="#what-are-physics-informed-neural-networks" title="Link to this heading"></a></h2>
+<p>Physics-Informed Neural Networks (PINNs) represent a paradigm shift in scientific computing. Unlike data-driven machine learning approaches that require large datasets of precomputed solutions, PINNs learn directly from physical laws without needing training data. The key innovation is embedding the governing partial differential equations (PDEs) directly into the neural network’s loss function, enabling data-free learning that respects physical laws.</p>
+<p>In jax-disk2D, the PINN maps spatiotemporal coordinates (radius, azimuth, time) = (r, θ, t) to the physical solution variables: surface density Σ, radial velocity v_r, and azimuthal velocity v_θ. The network learns to satisfy:</p>
+<ul class="simple">
+<li><p><strong>Continuity equation</strong>: Conservation of mass</p></li>
+<li><p><strong>Momentum equations</strong>: Conservation of momentum in radial and azimuthal directions</p></li>
+<li><p><strong>Initial conditions</strong>: The system’s state at t = 0</p></li>
+<li><p><strong>Boundary conditions</strong>: Physical constraints at domain boundaries</p></li>
+</ul>
+</section>
 <section id="key-features">
 <h2>Key Features<a class="headerlink" href="#key-features" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p><strong>Physics-Informed Neural Networks</strong>: Solve 2D disk hydrodynamics using neural networks constrained by physical laws</p></li>
-<li><p><strong>FARGO3D Integration</strong>: Seamlessly work with FARGO3D simulations for data generation</p></li>
+<li><p><strong>Data-Free Learning</strong>: Train neural networks directly on physical laws without requiring precomputed simulation data</p></li>
+<li><p><strong>Continuous Solutions</strong>: Obtain solutions at arbitrary times and locations within the training domain, not limited to discretized grids</p></li>
+<li><p><strong>Boundary-Free Approach</strong>: Naturally eliminates spurious wave reflections at disk edges without explicit wave-killing mechanisms</p></li>
+<li><p><strong>Time-Marching Strategy</strong>: Decomposes long-term evolution into manageable time intervals for stable training</p></li>
+<li><p><strong>FARGO3D Integration</strong>: Validate PINN solutions against traditional numerical simulations</p></li>
 <li><p><strong>JAX-based</strong>: Leverage JAX for high-performance automatic differentiation and GPU acceleration</p></li>
 <li><p><strong>Guild AI Workflow</strong>: Use Guild AI for experiment management and reproducibility</p></li>
-<li><p><strong>Flexible Configuration</strong>: Easy-to-use configuration system for different simulation setups</p></li>
 </ul>
 </section>
-<section id="what-is-a-pinn">
-<h2>What is a PINN?<a class="headerlink" href="#what-is-a-pinn" title="Link to this heading"></a></h2>
-<p>Physics-Informed Neural Networks (PINNs) are neural networks that are trained to satisfy both:</p>
+<section id="scientific-impact">
+<h2>Scientific Impact<a class="headerlink" href="#scientific-impact" title="Link to this heading"></a></h2>
+<p>This implementation successfully reproduces key physical phenomena in accretion disk dynamics, including:</p>
 <ul class="simple">
-<li><p><strong>Data constraints</strong>: Match observed or simulated data</p></li>
-<li><p><strong>Physics constraints</strong>: Satisfy partial differential equations (PDEs) that govern the physical system</p></li>
+<li><p><strong>Spiral density waves</strong>: Excitation and propagation of density waves from disk-companion interactions</p></li>
+<li><p><strong>Gap formation</strong>: Opening of gaps in the disk due to companion interactions</p></li>
+<li><p><strong>Long-term evolution</strong>: Stable solutions over extended timescales</p></li>
 </ul>
-<p>In jax-disk2D, the PINN learns to solve the 2D disk hydrodynamics equations by:</p>
-<ul class="simple">
-<li><p>Learning from FARGO3D simulation data</p></li>
-<li><p>Enforcing the continuity and momentum equations as loss terms</p></li>
-<li><p>Satisfying boundary conditions and initial conditions</p></li>
-</ul>
+<p>The boundary-free approach enabled by PINNs naturally suppresses spurious wave reflections at disk edges, which are challenging to eliminate in traditional numerical simulations that require explicit boundary conditions and damping zones.</p>
 </section>
 <section id="project-structure">
 <h2>Project Structure<a class="headerlink" href="#project-structure" title="Link to this heading"></a></h2>
 <p>The package is organized into several main components:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">jaxdisk2D/physics_informed_training/</span></code>: Core PINN training modules</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">fargo_utils/</span></code>: Utilities for working with FARGO3D</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">fargo_data_process/</span></code>: Tools for processing FARGO3D output data</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">guild.yml</span></code>: Guild AI workflow definitions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jaxdisk2D/physics_informed_training/</span></code>: Core PINN training modules implementing time-marching, periodic layers, and physics constraints</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fargo_utils/</span></code>: Utilities for setting up and running FARGO3D simulations</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fargo_data_process/</span></code>: Tools for processing FARGO3D output data (used for validation, not training)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">guild.yml</span></code>: Guild AI workflow definitions for reproducible experiments</p></li>
 </ul>
+</section>
+<section id="reference">
+<h2>Reference<a class="headerlink" href="#reference" title="Link to this heading"></a></h2>
+<p>This codebase implements the methods described in:</p>
+<p><strong>Mao et al. (2025)</strong>: “Neural Networks as Surrogate Solvers for Time-dependent Accretion Disk Dynamics”, <em>The Astrophysical Journal Letters</em>, 992:L20. <a class="reference external" href="https://doi.org/10.3847/2041-8213/ae0b60">DOI: 10.3847/2041-8213/ae0b60</a></p>
 </section>
 </section>
 
