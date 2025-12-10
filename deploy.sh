@@ -54,11 +54,24 @@ else
     
     # Push to GitHub
     echo "⬆️  Pushing to GitHub..."
-    git push origin gh-pages
-    
-    echo "✅ Documentation deployed successfully!"
-    echo "🌐 Your site will be available at:"
-    echo "   https://$(git config --get remote.origin.url | sed 's/.*github.com[:/]\(.*\)\.git/\1/')"
+    if git push origin gh-pages; then
+        echo "✅ Documentation deployed successfully!"
+        echo "🌐 Your site will be available at:"
+        REMOTE_URL=$(git config --get remote.origin.url)
+        if [[ $REMOTE_URL == *"github.com"* ]]; then
+            REPO_PATH=$(echo "$REMOTE_URL" | sed -E 's|.*github.com[:/](.*)\.git|\1|' | sed 's|:|/|')
+            echo "   https://${REPO_PATH%.git}"
+        else
+            echo "   (Check your GitHub repository settings > Pages)"
+        fi
+    else
+        echo "❌ Failed to push to GitHub"
+        echo "💡 Make sure you have:"
+        echo "   1. Created the repository on GitHub"
+        echo "   2. Set up the remote: git remote add origin <your-repo-url>"
+        echo "   3. Pushed your main branch first: git push -u origin main"
+        exit 1
+    fi
 fi
 
 # Return to the original branch
