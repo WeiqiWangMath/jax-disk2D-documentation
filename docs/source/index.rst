@@ -8,12 +8,12 @@ Welcome to the jax-disk2D documentation! This package provides a Physics-Informe
    :caption: Contents:
 
    introduction
+   installation
 
 .. toctree::
    :maxdepth: 2
    :caption: 
 
-   installation
    getting_started
    fargo_integration
    pinn_training

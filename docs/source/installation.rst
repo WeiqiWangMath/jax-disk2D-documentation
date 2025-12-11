@@ -4,17 +4,18 @@ Installation
 Prerequisites
 -------------
 
-* Python 3.8 or higher
+* Python 3.11 (recommended)
 * pip package manager
-* (Optional) CUDA toolkit for GPU support
+* CUDA toolkit (optional but strongly recommended for GPU support)
 
 Installing Python Dependencies
 -------------------------------
 
-Clone the repository and install the required dependencies:
+Clone the repository from the correct branch and install the required dependencies:
 
 .. code-block:: bash
 
+   git clone -b code_cleanup https://github.com/smao-astro/jax-disk2D.git
    cd jax-disk2D
    pip install -r requirements.txt
 
@@ -44,14 +45,5 @@ Guild AI
 --------
 
 jax-disk2D uses `Guild AI <https://my.guild.ai/t/guild-ai-documentation/64>`_ for workflow management. 
-Check ``guild.yml`` for more information on available operations.
-
-Verifying Installation
-----------------------
-
-After installation, you can verify that the package is working by running:
-
-.. code-block:: bash
-
-   python -c "import jaxdisk2D; print('jax-disk2D installed successfully')"
+Guild AI is included in ``requirements.txt`` and will be installed automatically. Check ``guild.yml`` for more information on available operations.
 
