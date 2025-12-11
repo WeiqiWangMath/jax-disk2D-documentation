@@ -4,10 +4,15 @@ jax-disk2D Documentation
 Welcome to the jax-disk2D documentation! This package provides a Physics-Informed Neural Network (PINN) framework for solving 2D disk hydrodynamics problems using JAX.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
 
    introduction
+
+.. toctree::
+   :maxdepth: 2
+   :caption: 
+
    installation
    getting_started
    fargo_integration
