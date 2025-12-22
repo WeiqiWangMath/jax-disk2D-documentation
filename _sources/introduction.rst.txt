@@ -5,6 +5,27 @@ jax-disk2D is a Python package that implements Physics-Informed Neural Networks 
 
 Accretion disks are ubiquitous in astrophysics, appearing in diverse environments from planet-forming protoplanetary disks to X-ray binaries and active galactic nuclei. Traditional modeling of their dynamics requires computationally intensive (magneto)hydrodynamic simulations, often demanding millions of CPU hours for a single run. As observational capabilities continue to advance—particularly with facilities like the Atacama Large Millimeter/submillimeter Array (ALMA)—the need for faster and more flexible modeling techniques becomes increasingly urgent.
 
+The following comparison demonstrates the accuracy of our PINN approach. The left video shows the PINN prediction, while the right video shows the reference solution from FARGO3D:
+
+.. raw:: html
+
+   <div class="video-group video-group-2">
+       <div class="video-item">
+           <video controls>
+               <source src="movies/a123c105/dens-predict.mp4" type="video/mp4">
+               Your browser does not support the video tag.
+           </video>
+           <div class="video-caption">PINN Prediction</div>
+       </div>
+       <div class="video-item">
+           <video controls>
+               <source src="movies/a123c105/dens-truth.mp4" type="video/mp4">
+               Your browser does not support the video tag.
+           </video>
+           <div class="video-caption">FARGO3D Reference</div>
+       </div>
+   </div>
+
 What are Physics-Informed Neural Networks?
 -------------------------------------------
 
@@ -39,20 +60,15 @@ This implementation successfully reproduces key physical phenomena in accretion 
 
 The boundary-free approach enabled by PINNs naturally suppresses spurious wave reflections at disk edges, which are challenging to eliminate in traditional numerical simulations that require explicit boundary conditions and damping zones.
 
-Project Structure
------------------
-
-The package is organized into several main components:
-
-* ``jaxdisk2D/physics_informed_training/``: Core PINN training modules implementing time-marching, periodic layers, and physics constraints
-* ``fargo_utils/``: Utilities for setting up and running FARGO3D simulations
-* ``fargo_data_process/``: Tools for processing FARGO3D output data (used for validation, not training)
-* ``guild.yml``: Guild AI workflow definitions for reproducible experiments
-
-Reference
----------
+References
+----------
 
 This codebase implements the methods described in:
 
 **Mao et al. (2025)**: "Neural Networks as Surrogate Solvers for Time-dependent Accretion Disk Dynamics", *The Astrophysical Journal Letters*, 992:L20. `DOI: 10.3847/2041-8213/ae0b60 <https://doi.org/10.3847/2041-8213/ae0b60>`_
+
+FARGO3D is used for validation and reference solutions:
+
+* **FARGO3D Documentation**: `https://fargo3d.github.io/documentation/ <https://fargo3d.github.io/documentation/>`_
+* **FARGO3D Paper**: Benítez-Llambay & Masset (2016), *The Astrophysical Journal Supplement Series*, 223:11. `DOI: 10.3847/0067-0049/223/1/11 <https://iopscience.iop.org/article/10.3847/0067-0049/223/1/11>`_
 

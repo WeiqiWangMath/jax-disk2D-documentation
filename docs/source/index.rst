@@ -8,6 +8,7 @@ Welcome to the jax-disk2D documentation! This package provides a Physics-Informe
    :caption: Contents:
 
    introduction
+   project_structure
    installation
    getting_started
    fargo_integration
