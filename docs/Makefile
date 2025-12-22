@@ -18,3 +18,7 @@ help:
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	@if [ "$@" = "html" ] && [ -d "../movies" ]; then \
+		echo "Copying movies folder to build directory..."; \
+		cp -r ../movies $(BUILDDIR)/html/movies; \
+	fi
