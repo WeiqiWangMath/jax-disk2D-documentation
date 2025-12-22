@@ -140,12 +140,10 @@
 ├── parameters.yml                  # Default training parameters
 ├── requirements.txt                # Python dependencies
 ├── fargo_make.yml                  # FARGO3D build configuration
-├── fargo_run.yml                   # FARGO3D run configuration
 ├── fargo2_run.yml                  # FARGO3D fargo2 setup
 ├── download_data.py                # Hugging Face data downloader
 ├── run_cpu.sh                      # CPU training script
-├── run_gpu.sh                      # GPU training script
-└── submit.sh                       # HPC submission script
+└── run_gpu.sh                      # GPU training script
 </pre></div>
 </div>
 </section>
@@ -210,17 +208,15 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">parameters.yml</span></code>: Default PINN training parameters representing a high-performance configuration optimized for accurate long-term disk evolution. Includes network architecture (layer sizes, activation functions), training settings (learning rate, decay schedule, number of epochs), sampling strategy (collocation points, resampling frequency), loss weighting methods, and physical parameters (Reynolds number, disk aspect ratio). Users typically start with these defaults and adjust for specific problems.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code>: Python package dependencies with version specifications ensuring reproducible environments. Includes core dependencies (JAX, numpy, scipy), visualization libraries (matplotlib, ffmpeg), data processing tools (xarray, netCDF4), workflow management (guildai), configuration parsing (PyYAML), and progress monitoring (tqdm). Installing these dependencies creates a complete working environment.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">fargo_make.yml</span></code>: FARGO3D compilation configuration for Guild AI integration. Specifies compiler flags (optimization level, GPU support, debug symbols), build directories, setup selection, and parallel compilation settings. Enables automated compilation as part of the workflow ensuring consistency between different machines and users.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">fargo_run.yml</span></code>: FARGO3D simulation configuration for reproducible reference runs. Defines which setup to run, grid resolution, integration duration, output cadence, restart options, and resource requirements (CPU cores, GPU devices). Used to generate reference solutions for validating PINN accuracy.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">fargo2_run.yml</span></code>: Specific configuration for the fargo2 setup (planet-disk interaction scenario). Includes planet mass, orbital radius, disk properties, simulation duration covering multiple orbits, and output frequency capturing wave dynamics. This benchmark problem demonstrates spiral density wave excitation and gap formation.</p></li>
 </ul>
 </section>
 <section id="execution-scripts">
 <h3>Execution Scripts<a class="headerlink" href="#execution-scripts" title="Link to this heading"></a></h3>
-<p>Shell scripts for common execution scenarios:</p>
+<p>Shell scripts and utilities for common execution scenarios:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">run_cpu.sh</span></code>: Launches PINN training on CPU with appropriate thread settings and memory limits. Useful for debugging, small-scale tests, and environments without GPU access.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">run_gpu.sh</span></code>: Launches PINN training on GPU with CUDA configuration and memory optimization flags. Provides significant speedup (10-100x) compared to CPU execution for typical problem sizes.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">submit.sh</span></code>: HPC cluster job submission script with SLURM directives. Specifies resource requests (nodes, GPUs, memory, walltime), environment setup, and job dependencies. Enables large-scale training runs on institutional computing clusters.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">download_data.py</span></code>: Downloads precomputed datasets and trained models from Hugging Face Hub. Provides quick access to reference solutions and pretrained networks without running lengthy FARGO3D simulations or PINN training sessions. Includes resume capabilities for interrupted downloads.</p></li>
 </ul>
 </section>

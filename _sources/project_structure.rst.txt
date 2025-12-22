@@ -57,12 +57,10 @@ The jax-disk2D package is organized as follows:
    ├── parameters.yml                  # Default training parameters
    ├── requirements.txt                # Python dependencies
    ├── fargo_make.yml                  # FARGO3D build configuration
-   ├── fargo_run.yml                   # FARGO3D run configuration
    ├── fargo2_run.yml                  # FARGO3D fargo2 setup
    ├── download_data.py                # Hugging Face data downloader
    ├── run_cpu.sh                      # CPU training script
-   ├── run_gpu.sh                      # GPU training script
-   └── submit.sh                       # HPC submission script
+   └── run_gpu.sh                      # GPU training script
 
 Main Components
 ---------------
@@ -160,19 +158,15 @@ These files control various aspects of the workflow from FARGO3D simulations to 
 
 * ``fargo_make.yml``: FARGO3D compilation configuration for Guild AI integration. Specifies compiler flags (optimization level, GPU support, debug symbols), build directories, setup selection, and parallel compilation settings. Enables automated compilation as part of the workflow ensuring consistency between different machines and users.
 
-* ``fargo_run.yml``: FARGO3D simulation configuration for reproducible reference runs. Defines which setup to run, grid resolution, integration duration, output cadence, restart options, and resource requirements (CPU cores, GPU devices). Used to generate reference solutions for validating PINN accuracy.
-
 * ``fargo2_run.yml``: Specific configuration for the fargo2 setup (planet-disk interaction scenario). Includes planet mass, orbital radius, disk properties, simulation duration covering multiple orbits, and output frequency capturing wave dynamics. This benchmark problem demonstrates spiral density wave excitation and gap formation.
 
 Execution Scripts
 ~~~~~~~~~~~~~~~~~
 
-Shell scripts for common execution scenarios:
+Shell scripts and utilities for common execution scenarios:
 
 * ``run_cpu.sh``: Launches PINN training on CPU with appropriate thread settings and memory limits. Useful for debugging, small-scale tests, and environments without GPU access.
 
 * ``run_gpu.sh``: Launches PINN training on GPU with CUDA configuration and memory optimization flags. Provides significant speedup (10-100x) compared to CPU execution for typical problem sizes.
-
-* ``submit.sh``: HPC cluster job submission script with SLURM directives. Specifies resource requests (nodes, GPUs, memory, walltime), environment setup, and job dependencies. Enables large-scale training runs on institutional computing clusters.
 
 * ``download_data.py``: Downloads precomputed datasets and trained models from Hugging Face Hub. Provides quick access to reference solutions and pretrained networks without running lengthy FARGO3D simulations or PINN training sessions. Includes resume capabilities for interrupted downloads.
