@@ -43,6 +43,15 @@ intersphinx_mapping = {
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 
+# Add custom CSS and JavaScript
+html_css_files = [
+    'custom.css',  # Widens the page and adds video styles
+]
+
+html_js_files = [
+    'sync_videos.js',  # Synchronizes video playback
+]
+
 # Theme options
 html_theme_options = {
     'display_version': True,

@@ -44,6 +44,36 @@ Generate 2D movies of the predictions:
 
 This creates animated visualizations comparing the PINN predictions with the FARGO3D data.
 
+Synchronized Video Comparison
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following shows three synchronized videos of density predictions from different runs:
+
+.. raw:: html
+
+   <div class="video-group video-group-3">
+       <div class="video-item">
+           <video controls>
+               <source src="movies/0bb155ba/dens-predict.mp4" type="video/mp4">
+               Your browser does not support the video tag.
+           </video>
+       </div>
+       <div class="video-item">
+           <video controls>
+               <source src="movies/1f1dc333/dens-predict.mp4" type="video/mp4">
+               Your browser does not support the video tag.
+           </video>
+       </div>
+       <div class="video-item">
+           <video controls>
+               <source src="movies/3c51e831/dens-predict.mp4" type="video/mp4">
+               Your browser does not support the video tag.
+           </video>
+       </div>
+   </div>
+
+All three videos will play, pause, and seek together when you interact with any video in the group.
+
 Loss and Metrics
 ~~~~~~~~~~~~~~~~
 
