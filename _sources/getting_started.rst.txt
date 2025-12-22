@@ -30,7 +30,7 @@ Compile FARGO3D with a specific configuration:
 
    guild run fargo:setup @fargo_make.yml
 
-**Note**: To run simulations on GPU, you need to compile the code with ``GPU=1`` on a **GPU** node (CUDA must be loaded).
+**Note**: To run simulations on GPU(s), you need to compile the code with ``GPU=1`` on a **GPU** node (CUDA must be loaded).
 
 Step 3: Run a Simulation
 ------------------------
@@ -91,5 +91,5 @@ Next Steps
 
 * See :doc:`fargo_integration` for detailed FARGO3D usage
 * See :doc:`pinn_training` for advanced PINN training options
-* See :doc:`huggingface` for downloading pre-computed data from Hugging Face
+* See :doc:`api_reference` for API documentation
 

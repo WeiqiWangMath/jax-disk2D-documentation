@@ -9,7 +9,7 @@
   <title>PINN Training &mdash; jax-disk2D 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=2293ad74" />
+      <link rel="stylesheet" type="text/css" href="_static/sync_videos.css?v=953de6ad" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
@@ -21,7 +21,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Hugging Face Integration" href="huggingface.html" />
+    <link rel="next" title="API Reference" href="api_reference.html" />
     <link rel="prev" title="FARGO3D Integration" href="fargo_integration.html" /> 
 </head>
 
@@ -51,8 +51,19 @@
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fargo_integration.html">FARGO3D Integration</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">PINN Training</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#basic-training">Basic Training</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#training-parameters">Training Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quick-summary">Quick Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#training-parameters">Training Parameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#network-architecture-parameters">Network Architecture Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#training-configuration-parameters">Training Configuration Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sampling-parameters">Sampling Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#initial-and-boundary-condition-parameters">Initial and Boundary Condition Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output-scaling-parameters">Output Scaling Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#time-marching-parameters">Time-Marching Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#loss-and-gradient-computation-parameters">Loss and Gradient Computation Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#logging-and-checkpointing-parameters">Logging and Checkpointing Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fargo3d-integration-parameters">FARGO3D Integration Parameters</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#visualization">Visualization</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#d-movies">2D Movies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#synchronized-video-comparison">Synchronized Video Comparison</a></li>
@@ -60,10 +71,8 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#gpu-training">GPU Training</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#training-components">Training Components</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="huggingface.html">Hugging Face Integration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_reference.html">API Reference</a></li>
 </ul>
 
@@ -93,31 +102,112 @@
              
   <section id="pinn-training">
 <h1>PINN Training<a class="headerlink" href="#pinn-training" title="Link to this heading"></a></h1>
-<p>This section covers training Physics-Informed Neural Networks (PINNs) with jax-disk2D.</p>
-<section id="basic-training">
-<h2>Basic Training<a class="headerlink" href="#basic-training" title="Link to this heading"></a></h2>
-<p>Train a PINN model using FARGO3D output data:</p>
+<p>This section covers advanced training options for Physics-Informed Neural Networks (PINNs) with jax-disk2D. For the basic workflow of training a PINN model, see the <a class="reference internal" href="getting_started.html"><span class="doc">Getting Started</span></a> guide.</p>
+<section id="quick-summary">
+<h2>Quick Summary<a class="headerlink" href="#quick-summary" title="Link to this heading"></a></h2>
+<p>Training a PINN involves:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>guild<span class="w"> </span>run<span class="w"> </span>pinn:train<span class="w"> </span>@parameters.yml<span class="w"> </span>fargo:to_xarray<span class="o">=</span>&lt;to_xarray_job_id&gt;
 </pre></div>
 </div>
-<p>The training process will:</p>
-<ul class="simple">
-<li><p>Load the converted FARGO3D data</p></li>
-<li><p>Initialize a neural network</p></li>
-<li><p>Train the network to satisfy both data constraints and physics constraints</p></li>
-<li><p>Save checkpoints and TensorBoard logs</p></li>
-</ul>
+<p>The training process loads converted FARGO3D data, initializes a neural network, and trains it to satisfy physics constraints (PDE residuals) without requiring training data. The network learns to solve the hydrodynamics equations directly from the physical laws encoded in the loss function.</p>
 </section>
 <section id="training-parameters">
 <h2>Training Parameters<a class="headerlink" href="#training-parameters" title="Link to this heading"></a></h2>
-<p>Training is configured through <code class="docutils literal notranslate"><span class="pre">parameters.yml</span></code>. Key parameters include:</p>
+<p>Training is configured through <code class="docutils literal notranslate"><span class="pre">parameters.yml</span></code>. The default configuration represents a high-performance setup optimized for accurate long-term evolution. All parameters are documented below with their default values.</p>
+<section id="network-architecture-parameters">
+<h3>Network Architecture Parameters<a class="headerlink" href="#network-architecture-parameters" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p>Network architecture (width, depth, activation functions)</p></li>
-<li><p>Training iterations</p></li>
-<li><p>Learning rate and optimizer settings</p></li>
-<li><p>Sampling strategies for PDE residuals</p></li>
-<li><p>Weight balancing for different loss terms</p></li>
+<li><p><strong>layer_size</strong> (<code class="docutils literal notranslate"><span class="pre">32,32,32,32,32,32,32,32,32</span></code>): Hidden layer sizes for the multi-layer perceptron (MLP). The default configuration uses 9 hidden layers with 32 neurons each. This provides sufficient capacity for learning complex spatiotemporal dynamics.</p></li>
+<li><p><strong>activation</strong> (<code class="docutils literal notranslate"><span class="pre">stan</span></code>): Activation function for the neural network. Options include <code class="docutils literal notranslate"><span class="pre">sin</span></code>, <code class="docutils literal notranslate"><span class="pre">tanh</span></code>, <code class="docutils literal notranslate"><span class="pre">swish</span></code>, and <code class="docutils literal notranslate"><span class="pre">stan</span></code>. The <code class="docutils literal notranslate"><span class="pre">stan</span></code> activation is a smooth, periodic activation function well-suited for physical systems.</p></li>
+<li><p><strong>initializer</strong> (<code class="docutils literal notranslate"><span class="pre">glorot_normal</span></code>): Weight initialization method. Options include <code class="docutils literal notranslate"><span class="pre">glorot_uniform</span></code>, <code class="docutils literal notranslate"><span class="pre">glorot_normal</span></code>, <code class="docutils literal notranslate"><span class="pre">lecun_uniform</span></code>, <code class="docutils literal notranslate"><span class="pre">lecun_normal</span></code>, <code class="docutils literal notranslate"><span class="pre">he_uniform</span></code>, <code class="docutils literal notranslate"><span class="pre">he_normal</span></code>, and <code class="docutils literal notranslate"><span class="pre">sine_uniform</span></code>. Glorot (Xavier) normal initialization is the default. (TODO: Check if these options are still supported)</p></li>
+<li><p><strong>enable_x64</strong> (<code class="docutils literal notranslate"><span class="pre">no</span></code>): Whether to use 64-bit floating point precision in JAX. Set to <code class="docutils literal notranslate"><span class="pre">yes</span></code> for higher precision but slower computation. Default is <code class="docutils literal notranslate"><span class="pre">no</span></code> (32-bit).</p></li>
 </ul>
+</section>
+<section id="training-configuration-parameters">
+<h3>Training Configuration Parameters<a class="headerlink" href="#training-configuration-parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>num_epochs</strong> (<code class="docutils literal notranslate"><span class="pre">6400000</span></code>): Total number of training iterations. The high-performance default uses 6.4 million epochs for thorough convergence.</p></li>
+<li><p><strong>lr</strong> (<code class="docutils literal notranslate"><span class="pre">0.001</span></code>): Learning rate for the Adam optimizer. Controls the step size during gradient descent.</p></li>
+<li><p><strong>decay_rate</strong> (<code class="docutils literal notranslate"><span class="pre">0.9</span></code>): Learning rate decay rate. The learning rate is multiplied by this factor every <code class="docutils literal notranslate"><span class="pre">transition_steps</span></code> iterations.</p></li>
+<li><p><strong>transition_steps</strong> (<code class="docutils literal notranslate"><span class="pre">5000</span></code>): Number of steps per learning rate decay period. Used together with <code class="docutils literal notranslate"><span class="pre">decay_rate</span></code> to implement exponential learning rate decay.</p></li>
+<li><p><strong>random_seed</strong> (<code class="docutils literal notranslate"><span class="pre">123</span></code>): Random seed for reproducibility. Ensures consistent random number generation for sampling and initialization.</p></li>
+</ul>
+</section>
+<section id="sampling-parameters">
+<h3>Sampling Parameters<a class="headerlink" href="#sampling-parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>num_domain</strong> (<code class="docutils literal notranslate"><span class="pre">10000</span></code>): Number of collocation points sampled in the spatiotemporal domain for evaluating PDE residuals. Higher values provide better coverage but increase computational cost.</p></li>
+<li><p><strong>num_boundary</strong> (<code class="docutils literal notranslate"><span class="pre">0</span></code>): Number of training samples on the domain boundaries. Set to 0 in the default configuration as the boundary-free approach is used.</p></li>
+<li><p><strong>num_initial</strong> (<code class="docutils literal notranslate"><span class="pre">0</span></code>): Number of training samples for the initial condition. Set to 0 when using hard initial condition enforcement (see <code class="docutils literal notranslate"><span class="pre">ic</span></code> parameter).</p></li>
+<li><p><strong>num_period_sample</strong> (<code class="docutils literal notranslate"><span class="pre">10</span></code>): Period (in training steps) for resampling PDE domain collocation points. Resampling helps the network learn from different regions of the domain throughout training.</p></li>
+</ul>
+</section>
+<section id="initial-and-boundary-condition-parameters">
+<h3>Initial and Boundary Condition Parameters<a class="headerlink" href="#initial-and-boundary-condition-parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>ic</strong> (<code class="docutils literal notranslate"><span class="pre">hard</span></code>): Initial condition handling method. Options:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">hard</span></code>: Applies time-suppressed exact initial condition enforcement</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">shift</span></code>: Adds initial condition to network outputs</p></li>
+<li><p>Empty string: Disables initial condition transform</p></li>
+</ul>
+</li>
+<li><p><strong>bc</strong> (<code class="docutils literal notranslate"><span class="pre">ignore</span></code>): Boundary condition handling. Options:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">ignore</span></code>: Disables boundary condition losses (boundary-free approach)</p></li>
+<li><p>Empty string: Uses FARGO3D boundary condition types</p></li>
+</ul>
+</li>
+<li><p><strong>scale_on_hardic</strong> (<code class="docutils literal notranslate"><span class="pre">1.0</span></code>): Scale factor in the time-suppressor for hard initial conditions. Larger values mean faster release of the initial condition constraint.</p></li>
+</ul>
+</section>
+<section id="output-scaling-parameters">
+<h3>Output Scaling Parameters<a class="headerlink" href="#output-scaling-parameters" title="Link to this heading"></a></h3>
+<p>These parameters scale the network outputs to match the physical magnitudes of the solution variables:</p>
+<ul class="simple">
+<li><p><strong>scale_on_sigma</strong> (<code class="docutils literal notranslate"><span class="pre">0.1</span></code>): Output scaling factor for surface density (Σ)</p></li>
+<li><p><strong>scale_on_v_r</strong> (<code class="docutils literal notranslate"><span class="pre">0.001</span></code>): Output scaling factor for radial velocity (v_r)</p></li>
+<li><p><strong>scale_on_v_theta</strong> (<code class="docutils literal notranslate"><span class="pre">0.001</span></code>): Output scaling factor for azimuthal velocity (v_θ)</p></li>
+<li><p><strong>scale_on_t</strong> (<code class="docutils literal notranslate"><span class="pre">1.0</span></code>): Scaling applied to the time channel in periodic input transform</p></li>
+</ul>
+</section>
+<section id="time-marching-parameters">
+<h3>Time-Marching Parameters<a class="headerlink" href="#time-marching-parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>time_folds</strong> (<code class="docutils literal notranslate"><span class="pre">0,0.03125|(-0.00625,</span> <span class="pre">0.03125)*31</span></code>): Time window configuration for time-marching training. This parameter partitions the total simulation time into overlapping windows, each with its own neural network. The format is relative [start, width] segments that sum to 1.0. The default configuration uses 32 overlapping time windows.</p></li>
+</ul>
+</section>
+<section id="loss-and-gradient-computation-parameters">
+<h3>Loss and Gradient Computation Parameters<a class="headerlink" href="#loss-and-gradient-computation-parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>g_compute_method</strong> (<code class="docutils literal notranslate"><span class="pre">initial_loss_weighted_sum</span></code>): Method for aggregating per-loss gradients. Options:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">sum</span></code>: Simple sum of all loss gradients</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ntk_weighted_sum</span></code>: Neural Tangent Kernel (NTK) weighted sum</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">initial_loss_weighted_sum</span></code>: Weighted by initial loss values (default)</p></li>
+</ul>
+</li>
+<li><p><strong>number_period_update_weights</strong> (<code class="docutils literal notranslate"><span class="pre">100</span></code>): Period (in training steps) to update adaptive loss weights when using NTK or initial loss weighting methods.</p></li>
+</ul>
+</section>
+<section id="logging-and-checkpointing-parameters">
+<h3>Logging and Checkpointing Parameters<a class="headerlink" href="#logging-and-checkpointing-parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>num_period_log</strong> (<code class="docutils literal notranslate"><span class="pre">100</span></code>): Period (in training steps) for logging loss values to TensorBoard.</p></li>
+<li><p><strong>num_period_log_scaling_factors</strong> (<code class="docutils literal notranslate"><span class="pre">100</span></code>): Period for logging raw output magnitudes. Set to 0 to disable.</p></li>
+<li><p><strong>num_period_save_models</strong> (<code class="docutils literal notranslate"><span class="pre">10000</span></code>): Period (in training steps) for saving intermediate model checkpoints.</p></li>
+<li><p><strong>log_stats_g</strong> (<code class="docutils literal notranslate"><span class="pre">no</span></code>): Whether to log gradient statistics to TensorBoard.</p></li>
+<li><p><strong>save</strong> (<code class="docutils literal notranslate"><span class="pre">yes</span></code>): Whether to write models, logs, and NetCDF outputs to the save directory.</p></li>
+<li><p><strong>save_dir</strong> (<code class="docutils literal notranslate"><span class="pre">.</span></code>): Output directory for checkpoints, logs, and generated artifacts.</p></li>
+</ul>
+</section>
+<section id="fargo3d-integration-parameters">
+<h3>FARGO3D Integration Parameters<a class="headerlink" href="#fargo3d-integration-parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>fargo_setups</strong> (<code class="docutils literal notranslate"><span class="pre">fargo2</span></code>): FARGO3D setup name used to load physical parameters and configuration.</p></li>
+<li><p><strong>fargo_source_dir</strong> (<code class="docutils literal notranslate"><span class="pre">fargo3d</span></code>): Path to FARGO3D project or outputs directory containing configuration files and test data.</p></li>
+</ul>
+</section>
 </section>
 <section id="visualization">
 <h2>Visualization<a class="headerlink" href="#visualization" title="Link to this heading"></a></h2>
@@ -127,27 +217,27 @@
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>guild<span class="w"> </span>run<span class="w"> </span>pinn:draw_2d<span class="w"> </span>pinn:train<span class="o">=</span>&lt;train_job_id&gt;
 </pre></div>
 </div>
-<p>This creates animated visualizations comparing the PINN predictions with the FARGO3D data.</p>
+<p>This creates animated visualizations comparing the PINN predictions with the FARGO3D reference data.</p>
 </section>
 <section id="synchronized-video-comparison">
 <h3>Synchronized Video Comparison<a class="headerlink" href="#synchronized-video-comparison" title="Link to this heading"></a></h3>
-<p>The following shows three synchronized videos of density predictions from different runs:</p>
+<p>The following example shows three synchronized videos playing together for comparison:</p>
 <div class="video-group video-group-3">
     <div class="video-item">
         <video controls>
-            <source src="movies/0bb155ba/dens-predict.mp4" type="video/mp4">
+            <source src="../../movies/0bb155ba/dens-predict.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
     </div>
     <div class="video-item">
         <video controls>
-            <source src="movies/1f1dc333/dens-predict.mp4" type="video/mp4">
+            <source src="../../movies/1f1dc333/dens-predict.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
     </div>
     <div class="video-item">
         <video controls>
-            <source src="movies/3c51e831/dens-predict.mp4" type="video/mp4">
+            <source src="../../movies/3c51e831/dens-predict.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
     </div>
@@ -164,7 +254,7 @@
 </section>
 <section id="gpu-training">
 <h2>GPU Training<a class="headerlink" href="#gpu-training" title="Link to this heading"></a></h2>
-<p>For GPU training, first start the training job:</p>
+<p>For GPU training on HPC systems, first start the training job:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>guild<span class="w"> </span>run<span class="w"> </span>pinn:train<span class="w"> </span>@parameters.yml<span class="w"> </span>fargo:to_xarray<span class="o">=</span>&lt;to_xarray_job_id&gt;
 </pre></div>
 </div>
@@ -179,17 +269,6 @@
 </pre></div>
 </div>
 <p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;run_job_id&gt;</span></code> with the Guild run ID from the previous command.</p>
-</section>
-<section id="training-components">
-<h2>Training Components<a class="headerlink" href="#training-components" title="Link to this heading"></a></h2>
-<p>The PINN training involves several key components:</p>
-<ul class="simple">
-<li><p><strong>Neural Network</strong>: Multi-layer perceptron (MLP) that maps coordinates to physical fields</p></li>
-<li><p><strong>PDE Residuals</strong>: Loss terms enforcing the hydrodynamics equations</p></li>
-<li><p><strong>Boundary Conditions</strong>: Constraints at domain boundaries</p></li>
-<li><p><strong>Initial Conditions</strong>: Constraints at the initial time</p></li>
-<li><p><strong>Data Loss</strong>: Matching the FARGO3D simulation data</p></li>
-</ul>
 <p>See <a class="reference internal" href="api_reference.html"><span class="doc">API Reference</span></a> for detailed API documentation.</p>
 </section>
 </section>
@@ -199,7 +278,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="fargo_integration.html" class="btn btn-neutral float-left" title="FARGO3D Integration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="huggingface.html" class="btn btn-neutral float-right" title="Hugging Face Integration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="api_reference.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

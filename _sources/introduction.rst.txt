@@ -3,6 +3,8 @@ Introduction
 
 jax-disk2D is a Python package that implements Physics-Informed Neural Networks (PINNs) for solving two-dimensional, time-dependent hydrodynamics of non-self-gravitating accretion disks. This package provides the first demonstration of PINNs as surrogate solvers for accretion disk dynamics, enabling physics-driven, data-free modeling of complex astrophysical systems.
 
+Accretion disks are ubiquitous in astrophysics, appearing in diverse environments from planet-forming protoplanetary disks to X-ray binaries and active galactic nuclei. Traditional modeling of their dynamics requires computationally intensive (magneto)hydrodynamic simulations, often demanding millions of CPU hours for a single run. As observational capabilities continue to advance—particularly with facilities like the Atacama Large Millimeter/submillimeter Array (ALMA)—the need for faster and more flexible modeling techniques becomes increasingly urgent.
+
 What are Physics-Informed Neural Networks?
 -------------------------------------------
 
