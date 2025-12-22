@@ -1,96 +1,103 @@
 FARGO3D Integration
 ===================
 
-jax-disk2D integrates with FARGO3D for generating training data. This section covers how to set up, compile, and run FARGO3D simulations.
+jax-disk2D integrates with FARGO3D for validation and comparison purposes. FARGO3D is a well-established grid-based hydrodynamic solver that provides reference solutions against which PINN results can be validated. For detailed information about FARGO3D itself, see the `official FARGO3D documentation <https://github.com/FARGO3D/documentation>`_.
 
-Getting FARGO3D
----------------
+.. note::
 
-Download the FARGO3D sources using Guild AI:
+   The basic workflow for getting, compiling, and running FARGO3D simulations is covered in the :doc:`getting_started` guide. This section focuses on the configuration parameters used in jax-disk2D.
 
-.. code-block:: bash
+Default Configuration: fargo2_run.yml
+--------------------------------------
 
-   guild run fargo:get_fargo
+The default FARGO3D setup used in jax-disk2D is defined in ``fargo2_run.yml``. This configuration simulates a 2D accretion disk with a low-mass companion (planet) and provides the **physics settings for PINN training**. The physical parameters defined here (disk properties, planet mass, domain boundaries, etc.) determine the physical system that the PINN will learn to solve.
 
-This will clone the FARGO3D repository into a ``fargo3d/`` directory.
+All parameters described below are standard FARGO3D parameters and are documented in detail in the `FARGO3D documentation <https://github.com/FARGO3D/documentation>`_. The parameters are organized into several categories:
 
-Compiling FARGO3D
------------------
-
-Compile FARGO3D with a specific configuration:
-
-.. code-block:: bash
-
-   guild run fargo:setup @fargo_make.yml
-
-GPU Compilation
+Disk Parameters
 ~~~~~~~~~~~~~~~
 
-To run simulations on GPU(s), you need to:
+* **AspectRatio** (0.05): The disk aspect ratio, defined as H/r where H is the disk scale height and r is the radial coordinate. A value of 0.05 corresponds to a thin disk.
 
-1. Compile on a **GPU node** with CUDA loaded
-2. Set ``GPU=1`` in your configuration
-3. Ensure CUDA modules are loaded
+* **Sigma0** (1.0): The reference surface density normalization factor.
 
-Example for Compute Canada:
+* **Nu** (1.0e-5): The kinematic viscosity coefficient. This controls the strength of viscous diffusion in the disk.
 
-.. code-block:: bash
+* **SigmaSlope** (0.0): The power-law index for the initial surface density profile. A value of 0.0 corresponds to a flat surface density profile.
 
-   module load cuda
-   guild run fargo:setup @fargo_make.yml GPU=1
+* **FlaringIndex** (0.0): The flaring index for the disk scale height. A value of 0.0 means the scale height is constant with radius.
 
-Running Simulations
--------------------
+Damping Zone Parameters
+~~~~~~~~~~~~~~~~~~~~~~~
 
-Default fargo2 Setup
-~~~~~~~~~~~~~~~~~~~~
+* **DampingZone** (1.15): The radial range for wave damping, specified in period-ratios. Values smaller than one prevent damping. This parameter controls the location where waves are damped near the domain boundaries to prevent spurious reflections.
 
-Run a default fargo2 simulation:
+* **TauDamp** (0.3): The characteristic damping time, in units of the inverse local orbital frequency. Higher values mean lower damping (weaker damping).
 
-.. code-block:: bash
+Planet Parameters
+~~~~~~~~~~~~~~~
 
-   guild run fargo:run @fargo2_run.yml
+* **PlanetMass** (1e-05): The planet mass in units of the central star mass. A value of 1e-05 corresponds to a low-mass companion (approximately 10 Earth masses for a solar-mass star).
+
+* **PlanetMassFile** (cfg): Specifies that planet mass is read from a configuration file.
+
+* **PlanetConfig** (planets/jupiter.cfg): Path to the planet configuration file.
+
+* **ThicknessSmoothing** (0.6): The smoothing length for the planet's gravitational potential, in units of the disk scale height. This prevents numerical singularities.
+
+* **RocheSmoothing** (0.0): Additional smoothing for the Roche potential. A value of 0.0 means no additional smoothing.
+
+* **Eccentricity** (0.0): The orbital eccentricity of the planet. A value of 0.0 corresponds to a circular orbit.
+
+* **ExcludeHill** ('no'): Whether to exclude the Hill sphere from the simulation domain. Set to 'no' to include it.
+
+* **IndirectTerm** ('yes'): Whether to include the indirect term in the gravitational potential, accounting for the motion of the central star due to the planet.
+
+Mesh Parameters
+~~~~~~~~~~~~~~~
+
+* **Nx** (1536): Number of grid cells in the azimuthal (θ) direction.
+
+* **Ny** (1024): Number of grid cells in the radial (r) direction.
+
+* **Xmin** (-π): Minimum azimuthal coordinate (in radians). The value -π to π covers the full 2π azimuthal domain.
+
+* **Xmax** (π): Maximum azimuthal coordinate (in radians).
+
+* **Ymin** (0.4): Minimum radial coordinate in code units. This defines the inner boundary of the disk.
+
+* **Ymax** (2.5): Maximum radial coordinate in code units. This defines the outer boundary of the disk.
+
+* **OmegaFrame** (1.0005): The angular velocity of the reference frame. This is slightly larger than the Keplerian frequency at the planet's location, placing the frame in a slightly super-Keplerian state.
+
+* **Frame** (G): The reference frame type. 'G' indicates a frame that rotates with the planet.
+
+Output Control Parameters
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* **DT** (0.314159265359): The time step in code units. One orbit corresponds to 2π ≈ 6.28, so with DT ≈ 0.314, one orbit is approximately 20 time steps.
+
+* **Ninterm** (5): The number of time steps between intermediate outputs. Outputs are saved every 5 time steps.
+
+* **Ntot** (100): The total number of intermediate outputs. With Ninterm=5, this corresponds to 500 time steps total, or approximately 25 orbits.
+
+* **OutputDir** ('@outputs'): The directory where output files are saved. The '@outputs' is a Guild AI placeholder that gets resolved to the appropriate output directory.
+
+Plotting Parameters
+~~~~~~~~~~~~~~~~~~~
+
+* **PlotLog** ('yes'): Whether to use logarithmic scaling for plotting. Set to 'yes' for better visualization of density variations.
 
 Customizing Parameters
-~~~~~~~~~~~~~~~~~~~~~~
+----------------------
 
-You can override parameters when running:
+You can override any of these parameters when running a simulation. For example, to change the number of orbits:
 
 .. code-block:: bash
 
    guild run fargo:run @fargo2_run.yml Ntot=100
 
-This changes the number of orbits to 5 (assuming default time step).
+This changes ``Ntot`` to 100, which with the default ``Ninterm=5`` and ``DT≈0.314`` corresponds to approximately 25 orbits.
 
-Configuration Files
--------------------
-
-FARGO3D uses several configuration files:
-
-* ``fargo2_run.yml``: Default fargo2 setup configuration
-* ``fargo_run.yml``: Alternative setup configuration
-* ``fargo_make.yml``: Compilation configuration
-
-Converting Output
------------------
-
-Convert FARGO3D output to xarray format for PINN training:
-
-.. code-block:: bash
-
-   guild run fargo:to_xarray run=<run_job_id>
-
-This creates NetCDF files (``.nc``) and NumPy arrays (``.npz``) that can be used for training.
-
-Output Files
-~~~~~~~~~~~~
-
-The conversion process creates:
-
-* ``test_data.npz``: Training data in NumPy format
-* ``test_dens.nc``: Density field in NetCDF format
-* ``test_vx.nc``: Radial velocity in NetCDF format
-* ``test_vy.nc``: Azimuthal velocity in NetCDF format
-
-These files are automatically linked to PINN training operations.
+For more advanced customization, you can create your own configuration file based on ``fargo2_run.yml`` and modify the parameters as needed. All parameters are fully documented in the `FARGO3D documentation <https://github.com/FARGO3D/documentation>`_, which provides detailed explanations of their physical and numerical meanings. When modifying these parameters, keep in mind that they define the physical system that your PINN will be trained to solve.
 

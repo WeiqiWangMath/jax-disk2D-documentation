@@ -9,7 +9,7 @@
   <title>FARGO3D Integration &mdash; jax-disk2D 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="_static/sync_videos.css?v=953de6ad" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=2293ad74" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
@@ -50,24 +50,20 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">FARGO3D Integration</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#getting-fargo3d">Getting FARGO3D</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#compiling-fargo3d">Compiling FARGO3D</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#gpu-compilation">GPU Compilation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#default-configuration-fargo2-run-yml">Default Configuration: fargo2_run.yml</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#disk-parameters">Disk Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#damping-zone-parameters">Damping Zone Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#planet-parameters">Planet Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mesh-parameters">Mesh Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output-control-parameters">Output Control Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#plotting-parameters">Plotting Parameters</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#running-simulations">Running Simulations</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#default-fargo2-setup">Default fargo2 Setup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#customizing-parameters">Customizing Parameters</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#configuration-files">Configuration Files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#converting-output">Converting Output</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#output-files">Output Files</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#customizing-parameters">Customizing Parameters</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pinn_training.html">PINN Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="huggingface.html">Hugging Face Integration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_reference.html">API Reference</a></li>
 </ul>
 
@@ -97,81 +93,82 @@
              
   <section id="fargo3d-integration">
 <h1>FARGO3D Integration<a class="headerlink" href="#fargo3d-integration" title="Link to this heading"></a></h1>
-<p>jax-disk2D integrates with FARGO3D for generating training data. This section covers how to set up, compile, and run FARGO3D simulations.</p>
-<section id="getting-fargo3d">
-<h2>Getting FARGO3D<a class="headerlink" href="#getting-fargo3d" title="Link to this heading"></a></h2>
-<p>Download the FARGO3D sources using Guild AI:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>guild<span class="w"> </span>run<span class="w"> </span>fargo:get_fargo
-</pre></div>
+<p>jax-disk2D integrates with FARGO3D for validation and comparison purposes. FARGO3D is a well-established grid-based hydrodynamic solver that provides reference solutions against which PINN results can be validated. For detailed information about FARGO3D itself, see the <a class="reference external" href="https://github.com/FARGO3D/documentation">official FARGO3D documentation</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The basic workflow for getting, compiling, and running FARGO3D simulations is covered in the <a class="reference internal" href="getting_started.html"><span class="doc">Getting Started</span></a> guide. This section focuses on the configuration parameters used in jax-disk2D.</p>
 </div>
-<p>This will clone the FARGO3D repository into a <code class="docutils literal notranslate"><span class="pre">fargo3d/</span></code> directory.</p>
+<section id="default-configuration-fargo2-run-yml">
+<h2>Default Configuration: fargo2_run.yml<a class="headerlink" href="#default-configuration-fargo2-run-yml" title="Link to this heading"></a></h2>
+<p>The default FARGO3D setup used in jax-disk2D is defined in <code class="docutils literal notranslate"><span class="pre">fargo2_run.yml</span></code>. This configuration simulates a 2D accretion disk with a low-mass companion (planet) and provides the <strong>physics settings for PINN training</strong>. The physical parameters defined here (disk properties, planet mass, domain boundaries, etc.) determine the physical system that the PINN will learn to solve.</p>
+<p>All parameters described below are standard FARGO3D parameters and are documented in detail in the <a class="reference external" href="https://github.com/FARGO3D/documentation">FARGO3D documentation</a>. The parameters are organized into several categories:</p>
+<section id="disk-parameters">
+<h3>Disk Parameters<a class="headerlink" href="#disk-parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>AspectRatio</strong> (0.05): The disk aspect ratio, defined as H/r where H is the disk scale height and r is the radial coordinate. A value of 0.05 corresponds to a thin disk.</p></li>
+<li><p><strong>Sigma0</strong> (1.0): The reference surface density normalization factor.</p></li>
+<li><p><strong>Nu</strong> (1.0e-5): The kinematic viscosity coefficient. This controls the strength of viscous diffusion in the disk.</p></li>
+<li><p><strong>SigmaSlope</strong> (0.0): The power-law index for the initial surface density profile. A value of 0.0 corresponds to a flat surface density profile.</p></li>
+<li><p><strong>FlaringIndex</strong> (0.0): The flaring index for the disk scale height. A value of 0.0 means the scale height is constant with radius.</p></li>
+</ul>
 </section>
-<section id="compiling-fargo3d">
-<h2>Compiling FARGO3D<a class="headerlink" href="#compiling-fargo3d" title="Link to this heading"></a></h2>
-<p>Compile FARGO3D with a specific configuration:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>guild<span class="w"> </span>run<span class="w"> </span>fargo:setup<span class="w"> </span>@fargo_make.yml
-</pre></div>
-</div>
-<section id="gpu-compilation">
-<h3>GPU Compilation<a class="headerlink" href="#gpu-compilation" title="Link to this heading"></a></h3>
-<p>To run simulations on GPU(s), you need to:</p>
-<ol class="arabic simple">
-<li><p>Compile on a <strong>GPU node</strong> with CUDA loaded</p></li>
-<li><p>Set <code class="docutils literal notranslate"><span class="pre">GPU=1</span></code> in your configuration</p></li>
-<li><p>Ensure CUDA modules are loaded</p></li>
-</ol>
-<p>Example for Compute Canada:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module<span class="w"> </span>load<span class="w"> </span>cuda
-guild<span class="w"> </span>run<span class="w"> </span>fargo:setup<span class="w"> </span>@fargo_make.yml<span class="w"> </span><span class="nv">GPU</span><span class="o">=</span><span class="m">1</span>
-</pre></div>
-</div>
+<section id="damping-zone-parameters">
+<h3>Damping Zone Parameters<a class="headerlink" href="#damping-zone-parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>DampingZone</strong> (1.15): The radial range for wave damping, specified in period-ratios. Values smaller than one prevent damping. This parameter controls the location where waves are damped near the domain boundaries to prevent spurious reflections.</p></li>
+<li><p><strong>TauDamp</strong> (0.3): The characteristic damping time, in units of the inverse local orbital frequency. Higher values mean lower damping (weaker damping).</p></li>
+</ul>
 </section>
+<section id="planet-parameters">
+<h3>Planet Parameters<a class="headerlink" href="#planet-parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>PlanetMass</strong> (1e-05): The planet mass in units of the central star mass. A value of 1e-05 corresponds to a low-mass companion (approximately 10 Earth masses for a solar-mass star).</p></li>
+<li><p><strong>PlanetMassFile</strong> (cfg): Specifies that planet mass is read from a configuration file.</p></li>
+<li><p><strong>PlanetConfig</strong> (planets/jupiter.cfg): Path to the planet configuration file.</p></li>
+<li><p><strong>ThicknessSmoothing</strong> (0.6): The smoothing length for the planet’s gravitational potential, in units of the disk scale height. This prevents numerical singularities.</p></li>
+<li><p><strong>RocheSmoothing</strong> (0.0): Additional smoothing for the Roche potential. A value of 0.0 means no additional smoothing.</p></li>
+<li><p><strong>Eccentricity</strong> (0.0): The orbital eccentricity of the planet. A value of 0.0 corresponds to a circular orbit.</p></li>
+<li><p><strong>ExcludeHill</strong> (‘no’): Whether to exclude the Hill sphere from the simulation domain. Set to ‘no’ to include it.</p></li>
+<li><p><strong>IndirectTerm</strong> (‘yes’): Whether to include the indirect term in the gravitational potential, accounting for the motion of the central star due to the planet.</p></li>
+</ul>
 </section>
-<section id="running-simulations">
-<h2>Running Simulations<a class="headerlink" href="#running-simulations" title="Link to this heading"></a></h2>
-<section id="default-fargo2-setup">
-<h3>Default fargo2 Setup<a class="headerlink" href="#default-fargo2-setup" title="Link to this heading"></a></h3>
-<p>Run a default fargo2 simulation:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>guild<span class="w"> </span>run<span class="w"> </span>fargo:run<span class="w"> </span>@fargo2_run.yml
-</pre></div>
-</div>
+<section id="mesh-parameters">
+<h3>Mesh Parameters<a class="headerlink" href="#mesh-parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Nx</strong> (1536): Number of grid cells in the azimuthal (θ) direction.</p></li>
+<li><p><strong>Ny</strong> (1024): Number of grid cells in the radial (r) direction.</p></li>
+<li><p><strong>Xmin</strong> (-π): Minimum azimuthal coordinate (in radians). The value -π to π covers the full 2π azimuthal domain.</p></li>
+<li><p><strong>Xmax</strong> (π): Maximum azimuthal coordinate (in radians).</p></li>
+<li><p><strong>Ymin</strong> (0.4): Minimum radial coordinate in code units. This defines the inner boundary of the disk.</p></li>
+<li><p><strong>Ymax</strong> (2.5): Maximum radial coordinate in code units. This defines the outer boundary of the disk.</p></li>
+<li><p><strong>OmegaFrame</strong> (1.0005): The angular velocity of the reference frame. This is slightly larger than the Keplerian frequency at the planet’s location, placing the frame in a slightly super-Keplerian state.</p></li>
+<li><p><strong>Frame</strong> (G): The reference frame type. ‘G’ indicates a frame that rotates with the planet.</p></li>
+</ul>
+</section>
+<section id="output-control-parameters">
+<h3>Output Control Parameters<a class="headerlink" href="#output-control-parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>DT</strong> (0.314159265359): The time step in code units. One orbit corresponds to 2π ≈ 6.28, so with DT ≈ 0.314, one orbit is approximately 20 time steps.</p></li>
+<li><p><strong>Ninterm</strong> (5): The number of time steps between intermediate outputs. Outputs are saved every 5 time steps.</p></li>
+<li><p><strong>Ntot</strong> (100): The total number of intermediate outputs. With Ninterm=5, this corresponds to 500 time steps total, or approximately 25 orbits.</p></li>
+<li><p><strong>OutputDir</strong> (<a class="reference external" href="mailto:'&#37;&#52;&#48;outputs">‘<span>&#64;</span>outputs</a>’): The directory where output files are saved. The <a class="reference external" href="mailto:'&#37;&#52;&#48;outputs">‘<span>&#64;</span>outputs</a>’ is a Guild AI placeholder that gets resolved to the appropriate output directory.</p></li>
+</ul>
+</section>
+<section id="plotting-parameters">
+<h3>Plotting Parameters<a class="headerlink" href="#plotting-parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>PlotLog</strong> (‘yes’): Whether to use logarithmic scaling for plotting. Set to ‘yes’ for better visualization of density variations.</p></li>
+</ul>
+</section>
 </section>
 <section id="customizing-parameters">
-<h3>Customizing Parameters<a class="headerlink" href="#customizing-parameters" title="Link to this heading"></a></h3>
-<p>You can override parameters when running:</p>
+<h2>Customizing Parameters<a class="headerlink" href="#customizing-parameters" title="Link to this heading"></a></h2>
+<p>You can override any of these parameters when running a simulation. For example, to change the number of orbits:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>guild<span class="w"> </span>run<span class="w"> </span>fargo:run<span class="w"> </span>@fargo2_run.yml<span class="w"> </span><span class="nv">Ntot</span><span class="o">=</span><span class="m">100</span>
 </pre></div>
 </div>
-<p>This changes the number of orbits to 5 (assuming default time step).</p>
-</section>
-</section>
-<section id="configuration-files">
-<h2>Configuration Files<a class="headerlink" href="#configuration-files" title="Link to this heading"></a></h2>
-<p>FARGO3D uses several configuration files:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">fargo2_run.yml</span></code>: Default fargo2 setup configuration</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">fargo_run.yml</span></code>: Alternative setup configuration</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">fargo_make.yml</span></code>: Compilation configuration</p></li>
-</ul>
-</section>
-<section id="converting-output">
-<h2>Converting Output<a class="headerlink" href="#converting-output" title="Link to this heading"></a></h2>
-<p>Convert FARGO3D output to xarray format for PINN training:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>guild<span class="w"> </span>run<span class="w"> </span>fargo:to_xarray<span class="w"> </span><span class="nv">run</span><span class="o">=</span>&lt;run_job_id&gt;
-</pre></div>
-</div>
-<p>This creates NetCDF files (<code class="docutils literal notranslate"><span class="pre">.nc</span></code>) and NumPy arrays (<code class="docutils literal notranslate"><span class="pre">.npz</span></code>) that can be used for training.</p>
-<section id="output-files">
-<h3>Output Files<a class="headerlink" href="#output-files" title="Link to this heading"></a></h3>
-<p>The conversion process creates:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">test_data.npz</span></code>: Training data in NumPy format</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">test_dens.nc</span></code>: Density field in NetCDF format</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">test_vx.nc</span></code>: Radial velocity in NetCDF format</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">test_vy.nc</span></code>: Azimuthal velocity in NetCDF format</p></li>
-</ul>
-<p>These files are automatically linked to PINN training operations.</p>
-</section>
+<p>This changes <code class="docutils literal notranslate"><span class="pre">Ntot</span></code> to 100, which with the default <code class="docutils literal notranslate"><span class="pre">Ninterm=5</span></code> and <code class="docutils literal notranslate"><span class="pre">DT≈0.314</span></code> corresponds to approximately 25 orbits.</p>
+<p>For more advanced customization, you can create your own configuration file based on <code class="docutils literal notranslate"><span class="pre">fargo2_run.yml</span></code> and modify the parameters as needed. All parameters are fully documented in the <a class="reference external" href="https://github.com/FARGO3D/documentation">FARGO3D documentation</a>, which provides detailed explanations of their physical and numerical meanings. When modifying these parameters, keep in mind that they define the physical system that your PINN will be trained to solve.</p>
 </section>
 </section>
 
