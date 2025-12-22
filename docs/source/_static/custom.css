@@ -1,0 +1,88 @@
+/* Custom styles to widen the entire website content area */
+.wy-nav-content {
+    max-width: 1400px !important;
+}
+
+@media screen and (min-width: 1600px) {
+    .wy-nav-content {
+        max-width: 1600px !important;
+    }
+}
+
+@media screen and (min-width: 1920px) {
+    .wy-nav-content {
+        max-width: 1800px !important;
+    }
+}
+
+/* Ensure proper spacing */
+.rst-content {
+    max-width: none !important;
+}
+
+/* Make code blocks and other content use full width */
+.rst-content .highlight,
+.rst-content pre,
+.rst-content .code-block {
+    max-width: 100%;
+}
+
+/* Styles for synchronized video groups */
+
+.video-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 20px 0;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.video-group .video-item {
+    flex: 1;
+    min-width: 300px;
+    max-width: 100%;
+    text-align: center;
+}
+
+.video-group .video-item video {
+    width: 100%;
+    display: block;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.video-group .video-item .video-caption {
+    margin-top: 8px;
+    font-size: 0.9em;
+    color: #666;
+    font-style: italic;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .video-group {
+        flex-direction: column;
+    }
+    
+    .video-group .video-item {
+        min-width: 100%;
+        max-width: 100%;
+    }
+}
+
+/* For 2 videos side by side */
+.video-group.video-group-2 .video-item {
+    flex: 0 1 calc(50% - 7.5px);
+}
+
+/* For 3 videos side by side */
+.video-group.video-group-3 .video-item {
+    flex: 0 1 calc(33.333% - 10px);
+}
+
+/* For 4 videos side by side */
+.video-group.video-group-4 .video-item {
+    flex: 0 1 calc(25% - 11.25px);
+}
