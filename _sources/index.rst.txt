@@ -13,7 +13,6 @@ Welcome to the jax-disk2D documentation! This package provides a Physics-Informe
    getting_started
    fargo_integration
    pinn_training
-   api_reference
 
 Indices and tables
 ==================

@@ -47,12 +47,20 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Project Structure</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Project Structure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#repository-tree">Repository Tree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#main-components">Main Components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#jaxdisk2d-package">jaxdisk2D Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fargo3d-integration">FARGO3D Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-files">Configuration Files</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fargo_integration.html">FARGO3D Integration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pinn_training.html">PINN Training</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api_reference.html">API Reference</a></li>
 </ul>
 
         </div>
@@ -81,13 +89,123 @@
              
   <section id="project-structure">
 <h1>Project Structure<a class="headerlink" href="#project-structure" title="Link to this heading"></a></h1>
-<p>The package is organized into several main components:</p>
+<p>This page provides an overview of the jax-disk2D repository structure and organization.</p>
+<section id="repository-tree">
+<h2>Repository Tree<a class="headerlink" href="#repository-tree" title="Link to this heading"></a></h2>
+<p>The jax-disk2D package is organized as follows:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>jax-disk2D/
+├── jaxdisk2D/                      # Main package
+│   └── physics_informed_training/  # PINN training modules
+│       ├── jaxphyinf/              # Core PINN framework
+│       │   ├── neural_networks.py  # MLP architectures
+│       │   ├── activation.py       # Custom activation functions
+│       │   ├── initialization.py   # Weight initialization
+│       │   ├── adaptive_weights.py # Loss weight balancing
+│       │   ├── gradients.py        # Gradient computation
+│       │   ├── constraints.py      # Physics constraints
+│       │   ├── io/                 # I/O utilities
+│       │   └── utils/              # Helper functions
+│       ├── train.py                # Main training script
+│       ├── run_time_marching.py    # Time-marching training
+│       ├── model.py                # PINN model definitions
+│       ├── pde.py                  # PDE residual computation
+│       ├── boundary_condition.py   # Boundary conditions
+│       ├── initial_condition.py    # Initial conditions
+│       ├── constraints.py          # Constraint definitions
+│       ├── sample.py               # Collocation point sampling
+│       ├── draw_2d.py              # Visualization tools
+│       ├── config.py               # Configuration management
+│       └── postprocess/            # Post-processing utilities
+│           ├── animation.py        # Animation generation
+│           ├── data.py             # Data processing
+│           └── tensorboard_utils.py # TensorBoard logging
+│
+├── fargo_utils/                    # FARGO3D integration
+│   ├── fargo_run.py                # FARGO3D runner
+│   ├── fargo_setups.py             # Setup configurations
+│   ├── boundary.py                 # Boundary conditions
+│   ├── ic.py                       # Initial conditions
+│   ├── planet.py                   # Planet configurations
+│   ├── opt.py                      # Option file handling
+│   ├── par.py                      # Parameter file handling
+│   └── setup_base/                 # Base setup templates
+│
+├── fargo_data_process/             # FARGO3D data processing
+│   ├── fargo_outputs2xarray.py     # Output conversion
+│   ├── fargoData.py                # Data loading
+│   ├── config.py                   # Configuration
+│   └── utils.py                    # Utilities
+│
+├── guild.yml                       # Guild AI workflow definitions
+├── parameters.yml                  # Default training parameters
+├── requirements.txt                # Python dependencies
+├── fargo_make.yml                  # FARGO3D build configuration
+├── fargo_run.yml                   # FARGO3D run configuration
+├── fargo2_run.yml                  # FARGO3D fargo2 setup
+├── download_data.py                # Hugging Face data downloader
+├── run_cpu.sh                      # CPU training script
+├── run_gpu.sh                      # GPU training script
+└── submit.sh                       # HPC submission script
+</pre></div>
+</div>
+</section>
+<section id="main-components">
+<h2>Main Components<a class="headerlink" href="#main-components" title="Link to this heading"></a></h2>
+<section id="jaxdisk2d-package">
+<h3>jaxdisk2D Package<a class="headerlink" href="#jaxdisk2d-package" title="Link to this heading"></a></h3>
+<p>The core package implementing Physics-Informed Neural Networks for disk hydrodynamics.</p>
+<p><strong>jaxdisk2D/physics_informed_training/</strong></p>
+<p>Core PINN training modules:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">jaxdisk2D/physics_informed_training/</span></code>: Core PINN training modules implementing time-marching, periodic layers, and physics constraints</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">fargo_utils/</span></code>: Utilities for setting up and running FARGO3D simulations</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">fargo_data_process/</span></code>: Tools for processing FARGO3D output data (used for validation, not training)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">guild.yml</span></code>: Guild AI workflow definitions for reproducible experiments</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">train.py</span></code>: Main training loop with loss computation and optimization</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">run_time_marching.py</span></code>: Time-marching strategy for long-term evolution</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">model.py</span></code>: Neural network model definitions with periodic layers and hard initial conditions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pde.py</span></code>: PDE residual computation for continuity and momentum equations</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sample.py</span></code>: Collocation point sampling strategies</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">draw_2d.py</span></code>: 2D visualization and animation generation</p></li>
 </ul>
+<p><strong>jaxdisk2D/physics_informed_training/jaxphyinf/</strong></p>
+<p>Low-level PINN framework (extracted for reusability):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">neural_networks.py</span></code>: Multi-layer perceptron implementations</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">activation.py</span></code>: Custom activation functions (Stan, Sin, etc.)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">initialization.py</span></code>: Weight initialization schemes</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">adaptive_weights.py</span></code>: Adaptive loss weight balancing (NTK, initial loss)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gradients.py</span></code>: Gradient computation and aggregation methods</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">constraints.py</span></code>: Soft constraint enforcement</p></li>
+</ul>
+</section>
+<section id="fargo3d-integration">
+<h3>FARGO3D Integration<a class="headerlink" href="#fargo3d-integration" title="Link to this heading"></a></h3>
+<p><strong>fargo_utils/</strong></p>
+<p>Utilities for setting up and running FARGO3D simulations:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fargo_run.py</span></code>: Python interface to FARGO3D</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fargo_setups.py</span></code>: Predefined simulation setups</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">boundary.py</span></code>: Boundary condition handling</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ic.py</span></code>: Initial condition generation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">planet.py</span></code>: Planet/companion configuration</p></li>
+</ul>
+<p><strong>fargo_data_process/</strong></p>
+<p>Tools for processing FARGO3D output data (used for validation, not training):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fargo_outputs2xarray.py</span></code>: Convert FARGO3D outputs to xarray format</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fargoData.py</span></code>: Load and manipulate FARGO3D data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">utils.py</span></code>: Helper functions for data processing</p></li>
+</ul>
+</section>
+<section id="configuration-files">
+<h3>Configuration Files<a class="headerlink" href="#configuration-files" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">guild.yml</span></code>: Guild AI workflow definitions for reproducible experiments</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">parameters.yml</span></code>: Default PINN training parameters</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code>: Python package dependencies</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fargo_make.yml</span></code>: FARGO3D compilation configuration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fargo_run.yml</span></code>: FARGO3D simulation configuration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fargo2_run.yml</span></code>: Specific configuration for fargo2 setup</p></li>
+</ul>
+</section>
+</section>
 </section>
 
 
