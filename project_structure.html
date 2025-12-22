@@ -21,8 +21,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Installation" href="installation.html" />
-    <link rel="prev" title="Introduction" href="introduction.html" /> 
+    <link rel="prev" title="PINN Training" href="pinn_training.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,20 +46,21 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fargo_integration.html">FARGO3D Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pinn_training.html">PINN Training</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Project Structure</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#repository-tree">Repository Tree</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#main-components">Main Components</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#jaxdisk2d-package">jaxdisk2D Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#fargo3d-integration">FARGO3D Integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#configuration-files">Configuration Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#execution-scripts">Execution Scripts</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="fargo_integration.html">FARGO3D Integration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pinn_training.html">PINN Training</a></li>
 </ul>
 
         </div>
@@ -153,56 +153,75 @@
 <h2>Main Components<a class="headerlink" href="#main-components" title="Link to this heading"></a></h2>
 <section id="jaxdisk2d-package">
 <h3>jaxdisk2D Package<a class="headerlink" href="#jaxdisk2d-package" title="Link to this heading"></a></h3>
-<p>The core package implementing Physics-Informed Neural Networks for disk hydrodynamics.</p>
+<p>The core package implementing Physics-Informed Neural Networks for disk hydrodynamics. This package contains all the machinery for training PINNs to solve the time-dependent, two-dimensional disk equations without requiring precomputed simulation data.</p>
 <p><strong>jaxdisk2D/physics_informed_training/</strong></p>
-<p>Core PINN training modules:</p>
+<p>Core PINN training modules that implement the complete training pipeline:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">train.py</span></code>: Main training loop with loss computation and optimization</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">run_time_marching.py</span></code>: Time-marching strategy for long-term evolution</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">model.py</span></code>: Neural network model definitions with periodic layers and hard initial conditions</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">pde.py</span></code>: PDE residual computation for continuity and momentum equations</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">sample.py</span></code>: Collocation point sampling strategies</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">draw_2d.py</span></code>: 2D visualization and animation generation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">train.py</span></code>: Main training loop implementing the complete optimization workflow. Handles loss computation from multiple sources (PDE residuals, boundary conditions, initial conditions), gradient aggregation, and parameter updates using Adam optimizer with learning rate scheduling. Manages checkpointing, logging to TensorBoard, and periodic model saving.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">run_time_marching.py</span></code>: Implements the time-marching strategy for stable long-term evolution. Decomposes the full time domain into overlapping windows, training separate neural networks for each window. This approach prevents error accumulation and enables modeling of extended timescales that would be unstable with a single global network.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">model.py</span></code>: Neural network model definitions featuring periodic input layers for azimuthal coordinate, hard enforcement of initial conditions through time-suppression functions, and output scaling to match physical magnitudes. Integrates the various components (neural networks, constraints, physics equations) into a unified model.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pde.py</span></code>: Computes PDE residuals for the governing equations of disk hydrodynamics: continuity equation (mass conservation) and momentum equations in radial and azimuthal directions. Implements automatic differentiation to compute spatial and temporal derivatives of the neural network outputs, which are then used to evaluate how well the solution satisfies the PDEs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sample.py</span></code>: Implements collocation point sampling strategies for evaluating PDE residuals, boundary conditions, and initial conditions. Supports uniform random sampling, Latin hypercube sampling, and stratified sampling. Handles resampling at regular intervals during training to ensure good coverage of the spatiotemporal domain.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">draw_2d.py</span></code>: Comprehensive 2D visualization and animation generation tools. Creates polar and Cartesian plots of solution fields (density, velocities), generates comparison plots with FARGO3D reference data, computes error metrics, and produces animations showing time evolution. Outputs in both PNG and MP4 formats for publications and presentations.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">config.py</span></code>: Configuration management system handling parameter loading, validation, and default values. Parses YAML configuration files, merges with command-line arguments, and provides type-safe access to training hyperparameters, network architecture settings, and physical parameters.</p></li>
 </ul>
 <p><strong>jaxdisk2D/physics_informed_training/jaxphyinf/</strong></p>
-<p>Low-level PINN framework (extracted for reusability):</p>
+<p>Low-level PINN framework extracted for reusability and modularity. This subpackage provides general-purpose tools that can be used for other PINN applications beyond disk hydrodynamics:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">neural_networks.py</span></code>: Multi-layer perceptron implementations</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">activation.py</span></code>: Custom activation functions (Stan, Sin, etc.)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">initialization.py</span></code>: Weight initialization schemes</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">adaptive_weights.py</span></code>: Adaptive loss weight balancing (NTK, initial loss)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">gradients.py</span></code>: Gradient computation and aggregation methods</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">constraints.py</span></code>: Soft constraint enforcement</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">neural_networks.py</span></code>: Multi-layer perceptron (MLP) implementations with various architectural choices. Supports different activation functions, normalization schemes, and output transformations. Implements periodic encoding for angular coordinates and Fourier feature mappings for improved high-frequency learning. Provides both fully-connected and residual network architectures.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">activation.py</span></code>: Custom activation functions optimized for physics-informed learning. Includes the Stan activation (smooth periodic function), sinusoidal activation (excellent for periodic problems), and adaptive activation functions that learn optimal shapes during training. Each activation is implemented with efficient JAX operations for GPU acceleration.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">initialization.py</span></code>: Weight initialization schemes critical for successful PINN training. Implements Glorot (Xavier) initialization, LeCun initialization, He initialization, and specialized sine initialization for periodic activation functions. Proper initialization helps avoid vanishing/exploding gradients and improves convergence speed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">adaptive_weights.py</span></code>: Adaptive loss weight balancing methods to handle the multi-objective nature of PINN training. Implements Neural Tangent Kernel (NTK) based weighting, initial loss weighting, and gradient-based methods. These techniques prevent any single loss term from dominating and ensure balanced learning across all physics constraints.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gradients.py</span></code>: Gradient computation and aggregation methods for multi-loss optimization. Implements various strategies for combining gradients from different loss terms (PDE residuals, boundary conditions, initial conditions, data). Supports sum aggregation, weighted sum, and sophisticated methods like gradient surgery to prevent conflicting gradient directions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">constraints.py</span></code>: Soft constraint enforcement mechanisms for incorporating boundary conditions, initial conditions, and other physical constraints into the loss function. Provides penalty-based methods and projection-based methods. Includes tools for time-varying constraints and spatially-varying constraints.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">io/</span></code>: Input/output utilities for saving and loading trained models, checkpoints, and training state. Implements efficient serialization of JAX PyTrees using msgpack and pickle. Handles checkpoint management with automatic cleanup of old checkpoints and recovery from interrupted training.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">utils/</span></code>: Helper functions and utilities including array operations (reshaping, indexing, broadcasting), PyTree operations (flattening, mapping, filtering), vectorization tools for efficient batch processing, and wrapper functions for common JAX patterns.</p></li>
 </ul>
 </section>
 <section id="fargo3d-integration">
 <h3>FARGO3D Integration<a class="headerlink" href="#fargo3d-integration" title="Link to this heading"></a></h3>
+<p>Integration with FARGO3D provides reference solutions for validation and comparison. While PINNs do not require training data, FARGO3D simulations serve as ground truth for evaluating accuracy and demonstrating that PINNs can reproduce results from traditional numerical methods.</p>
 <p><strong>fargo_utils/</strong></p>
-<p>Utilities for setting up and running FARGO3D simulations:</p>
+<p>Comprehensive utilities for setting up, configuring, and running FARGO3D simulations:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">fargo_run.py</span></code>: Python interface to FARGO3D</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">fargo_setups.py</span></code>: Predefined simulation setups</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">boundary.py</span></code>: Boundary condition handling</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">ic.py</span></code>: Initial condition generation</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">planet.py</span></code>: Planet/companion configuration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fargo_run.py</span></code>: Python interface to FARGO3D providing high-level control over simulation execution. Handles compilation with appropriate flags, manages input/output directories, monitors simulation progress, and captures stdout/stderr. Supports both CPU and GPU execution modes and provides restart capabilities for interrupted simulations.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fargo_setups.py</span></code>: Library of predefined simulation setups covering common disk scenarios. Includes the fargo2 setup (planet-disk interaction), planetary migration scenarios, multi-planet systems, and various disk configurations. Each setup specifies grid resolution, physical parameters, planet properties, and output cadence. Users can extend with custom setups by following the established patterns.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">boundary.py</span></code>: Sophisticated boundary condition handling matching FARGO3D’s capabilities. Implements various boundary types: open boundaries (waves exit freely), reflecting boundaries (waves bounce back), periodic boundaries (wrap-around), and damping boundaries (wave-killing zones). Generates appropriate boundary condition files that FARGO3D reads during initialization.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ic.py</span></code>: Initial condition generation for disk simulations. Creates physically realistic initial states including power-law surface density profiles, Keplerian velocity fields, thermal equilibrium temperature distributions, and perturbations for testing wave propagation. Supports both analytic formulas and numerical relaxation to equilibrium states.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">planet.py</span></code>: Planet and companion configuration system. Defines orbital parameters (semi-major axis, eccentricity, inclination), physical properties (mass, radius, accretion rate), and disk interaction parameters (smoothing length, torque prescription). Handles multi-planet systems with gravitational interactions and migration tracking.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">opt.py</span></code>: Option file parsing and generation. FARGO3D uses .opt files to specify which physics modules to enable (viscosity, self-gravity, MHD, etc.). This module reads and writes .opt files, validates options, and ensures consistency between different setup components.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">par.py</span></code>: Parameter file handling for FARGO3D’s .par format. These ASCII files contain simulation parameters like grid sizes, physical constants, output settings, and runtime controls. Provides convenient Python API for reading, modifying, and writing parameter files programmatically.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">setup_base/</span></code>: Base templates and reference files for creating new FARGO3D setups. Contains template C files for initial conditions, boundary condition specifications, default parameter files, and option files. Users copy and modify these templates when defining custom disk configurations or physical processes.</p></li>
 </ul>
 <p><strong>fargo_data_process/</strong></p>
-<p>Tools for processing FARGO3D output data (used for validation, not training):</p>
+<p>Tools for processing FARGO3D output data, used for validation and comparison with PINN solutions. These tools do not participate in PINN training (which is data-free) but enable quantitative accuracy assessment:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">fargo_outputs2xarray.py</span></code>: Convert FARGO3D outputs to xarray format</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">fargoData.py</span></code>: Load and manipulate FARGO3D data</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">utils.py</span></code>: Helper functions for data processing</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fargo_outputs2xarray.py</span></code>: Converts FARGO3D’s native binary output format to xarray datasets. FARGO3D writes fields as separate binary files for each output snapshot. This module reads these files, assembles them into coherent datasets with proper coordinates (radius, azimuth, time), applies unit conversions, and saves to NetCDF format for easier analysis and visualization.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fargoData.py</span></code>: Comprehensive data loading and manipulation interface. Provides high-level access to FARGO3D outputs including lazy loading for large datasets, on-the-fly unit conversions, spatial interpolation to arbitrary coordinates, temporal interpolation between snapshots, and computation of derived quantities (vorticity, angular momentum, torque densities).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">config.py</span></code>: Configuration management for data processing pipeline. Stores paths to FARGO3D outputs, coordinate system specifications, unit definitions, and output preferences. Ensures consistent data handling across different analysis scripts and workflows.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">utils.py</span></code>: Helper functions for common data processing tasks including grid operations (averaging, differentiation, integration), coordinate transformations (polar to Cartesian), resampling to different grid resolutions, and statistical analysis (mean, variance, Fourier analysis).</p></li>
 </ul>
 </section>
 <section id="configuration-files">
 <h3>Configuration Files<a class="headerlink" href="#configuration-files" title="Link to this heading"></a></h3>
+<p>These files control various aspects of the workflow from FARGO3D simulations to PINN training to experiment management:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">guild.yml</span></code>: Guild AI workflow definitions for reproducible experiments</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">parameters.yml</span></code>: Default PINN training parameters</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code>: Python package dependencies</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">fargo_make.yml</span></code>: FARGO3D compilation configuration</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">fargo_run.yml</span></code>: FARGO3D simulation configuration</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">fargo2_run.yml</span></code>: Specific configuration for fargo2 setup</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">guild.yml</span></code>: Guild AI workflow definitions enabling reproducible machine learning experiments. Defines operations (run FARGO3D, convert data, train PINN, generate visualizations) with their dependencies, flags (hyperparameters), and required files. Guild AI tracks all runs, logs metrics, manages artifacts, and enables hyperparameter sweeps. Essential for systematic experimentation and result comparison.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">parameters.yml</span></code>: Default PINN training parameters representing a high-performance configuration optimized for accurate long-term disk evolution. Includes network architecture (layer sizes, activation functions), training settings (learning rate, decay schedule, number of epochs), sampling strategy (collocation points, resampling frequency), loss weighting methods, and physical parameters (Reynolds number, disk aspect ratio). Users typically start with these defaults and adjust for specific problems.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code>: Python package dependencies with version specifications ensuring reproducible environments. Includes core dependencies (JAX, numpy, scipy), visualization libraries (matplotlib, ffmpeg), data processing tools (xarray, netCDF4), workflow management (guildai), configuration parsing (PyYAML), and progress monitoring (tqdm). Installing these dependencies creates a complete working environment.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fargo_make.yml</span></code>: FARGO3D compilation configuration for Guild AI integration. Specifies compiler flags (optimization level, GPU support, debug symbols), build directories, setup selection, and parallel compilation settings. Enables automated compilation as part of the workflow ensuring consistency between different machines and users.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fargo_run.yml</span></code>: FARGO3D simulation configuration for reproducible reference runs. Defines which setup to run, grid resolution, integration duration, output cadence, restart options, and resource requirements (CPU cores, GPU devices). Used to generate reference solutions for validating PINN accuracy.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fargo2_run.yml</span></code>: Specific configuration for the fargo2 setup (planet-disk interaction scenario). Includes planet mass, orbital radius, disk properties, simulation duration covering multiple orbits, and output frequency capturing wave dynamics. This benchmark problem demonstrates spiral density wave excitation and gap formation.</p></li>
+</ul>
+</section>
+<section id="execution-scripts">
+<h3>Execution Scripts<a class="headerlink" href="#execution-scripts" title="Link to this heading"></a></h3>
+<p>Shell scripts for common execution scenarios:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">run_cpu.sh</span></code>: Launches PINN training on CPU with appropriate thread settings and memory limits. Useful for debugging, small-scale tests, and environments without GPU access.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">run_gpu.sh</span></code>: Launches PINN training on GPU with CUDA configuration and memory optimization flags. Provides significant speedup (10-100x) compared to CPU execution for typical problem sizes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">submit.sh</span></code>: HPC cluster job submission script with SLURM directives. Specifies resource requests (nodes, GPUs, memory, walltime), environment setup, and job dependencies. Enables large-scale training runs on institutional computing clusters.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">download_data.py</span></code>: Downloads precomputed datasets and trained models from Hugging Face Hub. Provides quick access to reference solutions and pretrained networks without running lengthy FARGO3D simulations or PINN training sessions. Includes resume capabilities for interrupted downloads.</p></li>
 </ul>
 </section>
 </section>
@@ -212,8 +231,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="pinn_training.html" class="btn btn-neutral float-left" title="PINN Training" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
