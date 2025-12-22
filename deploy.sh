@@ -19,23 +19,9 @@ if ! git rev-parse --git-dir > /dev/null 2>&1; then
     exit 1
 fi
 
-# Get the current branch name
+# Get the current branch name (for commit message only)
 CURRENT_BRANCH=$(git branch --show-current)
 echo "📍 Current branch: $CURRENT_BRANCH"
-
-# If we're on gh-pages, try to find a source branch (main or master)
-if [ "$CURRENT_BRANCH" = "gh-pages" ]; then
-    if git show-ref --verify --quiet refs/heads/main; then
-        CURRENT_BRANCH="main"
-        echo "📄 Currently on gh-pages, will return to main branch"
-    elif git show-ref --verify --quiet refs/heads/master; then
-        CURRENT_BRANCH="master"
-        echo "📄 Currently on gh-pages, will return to master branch"
-    else
-        echo "⚠️  Warning: On gh-pages branch but no main/master branch found"
-        echo "   Will stay on gh-pages after deployment"
-    fi
-fi
 
 # Check if gh-pages branch exists
 if git show-ref --verify --quiet refs/heads/gh-pages; then
@@ -88,16 +74,8 @@ else
     fi
 fi
 
-# Return to the original branch (if it exists and is not gh-pages)
-if [ "$CURRENT_BRANCH" != "gh-pages" ] && git show-ref --verify --quiet refs/heads/"$CURRENT_BRANCH"; then
-    git checkout "$CURRENT_BRANCH"
-    echo "✨ Done! Returned to branch: $CURRENT_BRANCH"
-elif [ "$CURRENT_BRANCH" = "gh-pages" ]; then
-    echo "✨ Done! Still on gh-pages branch (no source branch to return to)"
-else
-    echo "⚠️  Warning: Could not return to branch $CURRENT_BRANCH"
-    echo "   You are still on gh-pages branch"
-fi
+# Stay on gh-pages branch after deployment
+echo "✨ Done! Deployment complete. Staying on gh-pages branch."
 echo ""
 echo "💡 Note: It may take a few minutes for GitHub Pages to update."
 echo "   Check your repository settings > Pages to see the deployment status."
