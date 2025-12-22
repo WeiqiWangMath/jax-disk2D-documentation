@@ -6,12 +6,20 @@ set -e  # Exit on error
 
 echo "🚀 Deploying documentation to GitHub Pages..."
 
-# Build the documentation
-echo "📦 Building documentation..."
+# Build the documentation (always rebuild fresh)
+echo "📦 Rebuilding documentation..."
 cd docs
+echo "   Cleaning previous build..."
 make clean
+echo "   Building HTML documentation..."
 make html
+echo "   Verifying movies folder is copied..."
+if [ -d "../movies" ] && [ ! -d "build/html/movies" ]; then
+    echo "   Copying movies folder to build directory..."
+    cp -r ../movies build/html/movies
+fi
 cd ..
+echo "✅ Build complete!"
 
 # Check if we're in a git repository
 if ! git rev-parse --git-dir > /dev/null 2>&1; then
