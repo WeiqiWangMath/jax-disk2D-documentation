@@ -9,6 +9,7 @@
   <title>PINN Training &mdash; jax-disk2D 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=2293ad74" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
@@ -16,6 +17,7 @@
       <script src="_static/documentation_options.js?v=d45e8c67"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/sync_videos.js?v=71b0c0f2"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -53,6 +55,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#training-parameters">Training Parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#visualization">Visualization</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#d-movies">2D Movies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#synchronized-video-comparison">Synchronized Video Comparison</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#loss-and-metrics">Loss and Metrics</a></li>
 </ul>
 </li>
@@ -125,6 +128,30 @@
 </pre></div>
 </div>
 <p>This creates animated visualizations comparing the PINN predictions with the FARGO3D data.</p>
+</section>
+<section id="synchronized-video-comparison">
+<h3>Synchronized Video Comparison<a class="headerlink" href="#synchronized-video-comparison" title="Link to this heading"></a></h3>
+<p>The following shows three synchronized videos of density predictions from different runs:</p>
+<div class="video-group video-group-3">
+    <div class="video-item">
+        <video controls>
+            <source src="movies/0bb155ba/dens-predict.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div class="video-item">
+        <video controls>
+            <source src="movies/1f1dc333/dens-predict.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div class="video-item">
+        <video controls>
+            <source src="movies/3c51e831/dens-predict.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+</div><p>All three videos will play, pause, and seek together when you interact with any video in the group.</p>
 </section>
 <section id="loss-and-metrics">
 <h3>Loss and Metrics<a class="headerlink" href="#loss-and-metrics" title="Link to this heading"></a></h3>
