@@ -21,7 +21,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="FARGO3D Integration" href="fargo_integration.html" />
+    <link rel="next" title="Default Parameters" href="default_parameters.html" />
     <link rel="prev" title="Installation" href="installation.html" /> 
 </head>
 
@@ -50,17 +50,20 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#quick-start-workflow">Quick Start Workflow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#step-1-get-fargo3d">Step 1: Get FARGO3D</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#step-2-compile-fargo3d">Step 2: Compile FARGO3D</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#step-3-run-a-simulation">Step 3: Run a Simulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#step-4-convert-fargo-output">Step 4: Convert FARGO Output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#step-5-train-a-pinn-model">Step 5: Train a PINN Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#step-6-visualize-results">Step 6: Visualize Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fargo3d-setup-and-simulation">FARGO3D Setup and Simulation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#step-1-get-and-compile-fargo3d">Step 1: Get and Compile FARGO3D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-2-run-fargo3d-simulation-and-convert-output">Step 2: Run FARGO3D Simulation and Convert Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pinn-training-and-visualization">PINN Training and Visualization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#step-3-train-a-pinn-model">Step 3: Train a PINN Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-4-visualize-results">Step 4: Visualize Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#submitting-jobs-to-gpu-compute-nodes">Submitting Jobs to GPU Compute Nodes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#next-steps">Next Steps</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="fargo_integration.html">FARGO3D Integration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pinn_training.html">PINN Training</a></li>
 <li class="toctree-l1"><a class="reference internal" href="default_parameters.html">Default Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="project_structure.html">Project Structure</a></li>
 </ul>
@@ -91,77 +94,118 @@
              
   <section id="getting-started">
 <h1>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h1>
-<p>This guide will walk you through a basic workflow: running a FARGO3D simulation, converting the output, and training a PINN model.</p>
+<p>This guide will walk you through a complete workflow: running a FARGO3D simulation, converting the output, training a PINN model, and visualizing results.</p>
+<p><strong>About Guild AI and Run IDs</strong></p>
+<p>This project uses Guild AI for workflow management and experiment tracking. Each operation you run with <code class="docutils literal notranslate"><span class="pre">guild</span> <span class="pre">run</span></code> is assigned a unique run ID. You’ll use these run IDs to link operations together (e.g., passing FARGO3D output to PINN training) and to reference specific runs for visualization or analysis.</p>
+<p>For more information about Guild AI, see the <a class="reference external" href="https://guildai.org/t/guild-ai-documentation/64">Guild AI Documentation</a>.</p>
 <section id="quick-start-workflow">
 <h2>Quick Start Workflow<a class="headerlink" href="#quick-start-workflow" title="Link to this heading"></a></h2>
 <ol class="arabic simple">
 <li><p><strong>Get and compile FARGO3D</strong></p></li>
-<li><p><strong>Run a FARGO3D simulation</strong></p></li>
-<li><p><strong>Convert FARGO output to xarray format</strong></p></li>
+<li><p><strong>Run FARGO3D simulation and convert output</strong></p></li>
 <li><p><strong>Train a PINN model</strong></p></li>
 <li><p><strong>Visualize results</strong></p></li>
 </ol>
 </section>
-<section id="step-1-get-fargo3d">
-<h2>Step 1: Get FARGO3D<a class="headerlink" href="#step-1-get-fargo3d" title="Link to this heading"></a></h2>
-<p>Download the FARGO3D sources:</p>
+<section id="fargo3d-setup-and-simulation">
+<h2>FARGO3D Setup and Simulation<a class="headerlink" href="#fargo3d-setup-and-simulation" title="Link to this heading"></a></h2>
+<section id="step-1-get-and-compile-fargo3d">
+<h3>Step 1: Get and Compile FARGO3D<a class="headerlink" href="#step-1-get-and-compile-fargo3d" title="Link to this heading"></a></h3>
+<p>Download and compile FARGO3D sources:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>guild<span class="w"> </span>run<span class="w"> </span>fargo:get_fargo
 </pre></div>
 </div>
-</section>
-<section id="step-2-compile-fargo3d">
-<h2>Step 2: Compile FARGO3D<a class="headerlink" href="#step-2-compile-fargo3d" title="Link to this heading"></a></h2>
-<p>Compile FARGO3D with a specific configuration:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>guild<span class="w"> </span>run<span class="w"> </span>fargo:setup<span class="w"> </span>@fargo_make.yml
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>guild<span class="w"> </span>run<span class="w"> </span>fargo:setup<span class="w"> </span>@fargo_make.yml<span class="w"> </span><span class="nv">GPU</span><span class="o">=</span><span class="m">1</span>
 </pre></div>
 </div>
-<p><strong>Note</strong>: To run simulations on GPU(s), you need to compile the code with <code class="docutils literal notranslate"><span class="pre">GPU=1</span></code> on a <strong>GPU</strong> node (CUDA must be loaded).</p>
+<p><strong>Note</strong>: Running FARGO3D on a GPU node with CUDA loaded is strongly recommended. Ensure you have loaded the required modules (e.g., <code class="docutils literal notranslate"><span class="pre">module</span> <span class="pre">load</span> <span class="pre">cuda/12.2</span></code> on ComputeCanada clusters).</p>
+<p><strong>Configuration Files</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fargo2_run.yml</span></code>: Default fargo2 setup configuration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fargo_make.yml</span></code>: Compilation configuration</p></li>
+</ul>
+<p>For detailed FARGO3D parameter documentation, see <a class="reference internal" href="default_parameters.html"><span class="doc">Default Parameters</span></a>.</p>
 </section>
-<section id="step-3-run-a-simulation">
-<h2>Step 3: Run a Simulation<a class="headerlink" href="#step-3-run-a-simulation" title="Link to this heading"></a></h2>
+<section id="step-2-run-fargo3d-simulation-and-convert-output">
+<h3>Step 2: Run FARGO3D Simulation and Convert Output<a class="headerlink" href="#step-2-run-fargo3d-simulation-and-convert-output" title="Link to this heading"></a></h3>
 <p>Run a default fargo2 setup:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>guild<span class="w"> </span>run<span class="w"> </span>fargo:run<span class="w"> </span>@fargo2_run.yml
 </pre></div>
 </div>
-<p>To change the number of orbits to 5:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>guild<span class="w"> </span>run<span class="w"> </span>fargo:run<span class="w"> </span>@fargo2_run.yml<span class="w"> </span><span class="nv">Ntot</span><span class="o">=</span><span class="m">100</span>
-</pre></div>
-</div>
-</section>
-<section id="step-4-convert-fargo-output">
-<h2>Step 4: Convert FARGO Output<a class="headerlink" href="#step-4-convert-fargo-output" title="Link to this heading"></a></h2>
-<p>Convert the FARGO output to xarray format for PINN training:</p>
+<p>Then convert the FARGO3D output to NetCDF format for PINN training:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>guild<span class="w"> </span>run<span class="w"> </span>fargo:to_xarray<span class="w"> </span><span class="nv">run</span><span class="o">=</span>&lt;run_job_id&gt;
 </pre></div>
 </div>
-<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;run_job_id&gt;</span></code> with the ID from the previous step.</p>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;run_job_id&gt;</span></code> with the ID from the FARGO run.</p>
+<p><strong>Customizing Parameters</strong></p>
+<p>You can override parameters when running. For example, to change the total number of output snapshots:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>guild<span class="w"> </span>run<span class="w"> </span>fargo:run<span class="w"> </span>@fargo2_run.yml<span class="w"> </span><span class="nv">Ntot</span><span class="o">=</span><span class="m">100</span>
+</pre></div>
+</div>
+<p><strong>Output Files</strong></p>
+<p>The conversion process creates NetCDF files:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">test_dens.nc</span></code>: Density field</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_vx.nc</span></code>: Radial velocity</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_vy.nc</span></code>: Azimuthal velocity</p></li>
+</ul>
+<p>These files are automatically linked to PINN training operations.</p>
 </section>
-<section id="step-5-train-a-pinn-model">
-<h2>Step 5: Train a PINN Model<a class="headerlink" href="#step-5-train-a-pinn-model" title="Link to this heading"></a></h2>
+</section>
+<section id="pinn-training-and-visualization">
+<h2>PINN Training and Visualization<a class="headerlink" href="#pinn-training-and-visualization" title="Link to this heading"></a></h2>
+<section id="step-3-train-a-pinn-model">
+<h3>Step 3: Train a PINN Model<a class="headerlink" href="#step-3-train-a-pinn-model" title="Link to this heading"></a></h3>
 <p>Train a PINN model using the converted data:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>guild<span class="w"> </span>run<span class="w"> </span>pinn:train<span class="w"> </span>@parameters.yml<span class="w"> </span>fargo:to_xarray<span class="o">=</span>&lt;to_xarray_job_id&gt;
 </pre></div>
 </div>
 <p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;to_xarray_job_id&gt;</span></code> with the ID from the conversion step.</p>
+<p>For detailed information about all training parameters and their default values, see <a class="reference internal" href="default_parameters.html"><span class="doc">Default Parameters</span></a>.</p>
 </section>
-<section id="step-6-visualize-results">
-<h2>Step 6: Visualize Results<a class="headerlink" href="#step-6-visualize-results" title="Link to this heading"></a></h2>
-<p>Draw 2D movies of the results:</p>
+<section id="step-4-visualize-results">
+<h3>Step 4: Visualize Results<a class="headerlink" href="#step-4-visualize-results" title="Link to this heading"></a></h3>
+<p><strong>Generate 2D Movies</strong></p>
+<p>Generate 2D movies of the PINN predictions:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>guild<span class="w"> </span>run<span class="w"> </span>pinn:draw_2d<span class="w"> </span>pinn:train<span class="o">=</span>&lt;train_job_id&gt;
 </pre></div>
 </div>
-<p>Plot loss and other metrics:</p>
+<p>This creates animated visualizations comparing the PINN predictions with the FARGO3D reference data. Check the movies in <code class="docutils literal notranslate"><span class="pre">$GUILD_HOME/runs/&lt;train_job_id&gt;/...</span></code></p>
+<p><strong>Plot Loss and Metrics</strong></p>
+<p>Plot training loss and other metrics:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>guild<span class="w"> </span>run<span class="w"> </span>pinn:plot_tb_summary<span class="w"> </span>pinn:train<span class="o">=</span>&lt;train_job_id&gt;
 </pre></div>
 </div>
 <p>Check the figures in <code class="docutils literal notranslate"><span class="pre">$GUILD_HOME/runs/&lt;train_job_id&gt;/runs/...</span></code></p>
 </section>
+</section>
+<section id="submitting-jobs-to-gpu-compute-nodes">
+<h2>Submitting Jobs to GPU Compute Nodes<a class="headerlink" href="#submitting-jobs-to-gpu-compute-nodes" title="Link to this heading"></a></h2>
+<p>On HPC systems like ComputeCanada clusters, you should submit computationally intensive operations to GPU compute nodes using SLURM. This is especially useful for PINN training runs, but the same approach works for other Guild operations such as FARGO3D simulations or visualization tasks.</p>
+<p><strong>Submitting a Training Job (Example)</strong></p>
+<p>First, start the Guild operation:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>guild<span class="w"> </span>run<span class="w"> </span>pinn:train<span class="w"> </span>@parameters.yml<span class="w"> </span>fargo:to_xarray<span class="o">=</span>&lt;to_xarray_job_id&gt;<span class="w"> </span>--stage
+</pre></div>
+</div>
+<p>Then submit it to a GPU node using SLURM:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sbatch<span class="w"> </span>--time<span class="o">=</span><span class="m">40</span>:00<span class="w"> </span>--account<span class="o">=</span>&lt;account&gt;<span class="w"> </span>--gres<span class="o">=</span>gpu:h100:1--mem<span class="o">=</span>64G<span class="w"> </span>run_gpu.sh<span class="w"> </span>&lt;run_job_id&gt;
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;run_job_id&gt;</span></code> with the Guild run ID from the previous command, and <code class="docutils literal notranslate"><span class="pre">&lt;account&gt;</span></code> with your compute allocation.</p>
+<p><strong>SLURM Parameters</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--time</span></code>: Maximum walltime for the job (format: hours:minutes)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--account</span></code>: Your compute allocation account</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--gres=gpu:1</span></code>: Request one H100 GPU</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--mem</span></code>: Memory allocation (e.g., 64G for 64 GB)</p></li>
+</ul>
+<p>Adjust these parameters based on your specific needs and available resources. See <a class="reference external" href="https://docs.alliancecan.ca/wiki/Running_jobs">https://docs.alliancecan.ca/wiki/Running_jobs</a> for more information on how to submit jobs to GPU compute nodes.</p>
+</section>
 <section id="next-steps">
 <h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>See <a class="reference internal" href="fargo_integration.html"><span class="doc">FARGO3D Integration</span></a> for detailed FARGO3D usage</p></li>
-<li><p>See <a class="reference internal" href="pinn_training.html"><span class="doc">PINN Training</span></a> for advanced PINN training options</p></li>
-<li><p>See <a class="reference internal" href="api_reference.html"><span class="doc">API Reference</span></a> for API documentation</p></li>
+<li><p>See <a class="reference internal" href="default_parameters.html"><span class="doc">Default Parameters</span></a> for detailed parameter documentation</p></li>
+<li><p>See <a class="reference internal" href="project_structure.html"><span class="doc">Project Structure</span></a> for repository organization</p></li>
 </ul>
 </section>
 </section>
@@ -171,7 +215,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="fargo_integration.html" class="btn btn-neutral float-right" title="FARGO3D Integration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="default_parameters.html" class="btn btn-neutral float-right" title="Default Parameters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

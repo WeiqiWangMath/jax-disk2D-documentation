@@ -10,8 +10,6 @@ Welcome to the jax-disk2D documentation! This package provides a Physics-Informe
    introduction
    installation
    getting_started
-   fargo_integration
-   pinn_training
    default_parameters
    project_structure
 
