@@ -1,0 +1,296 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Default Parameters &mdash; jax-disk2D 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/sync_videos.css?v=2293ad74" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/sync_videos.js?v=71b0c0f2"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Project Structure" href="project_structure.html" />
+    <link rel="prev" title="PINN Training" href="pinn_training.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            jax-disk2D
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fargo_integration.html">FARGO3D Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pinn_training.html">PINN Training</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Default Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#fargo3d-parameters">FARGO3D Parameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#disk-parameters">Disk Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#planet-parameters">Planet Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mesh-parameters">Mesh Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output-control-parameters">Output Control Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#plotting-parameters">Plotting Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pinn-training-parameters">PINN Training Parameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#network-architecture-parameters">Network Architecture Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#training-configuration-parameters">Training Configuration Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sampling-parameters">Sampling Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#initial-and-boundary-condition-parameters">Initial and Boundary Condition Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output-scaling-parameters">Output Scaling Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#time-marching-parameters">Time-Marching Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#loss-and-gradient-computation-parameters">Loss and Gradient Computation Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#logging-and-checkpointing-parameters">Logging and Checkpointing Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fargo3d-integration-parameters">FARGO3D Integration Parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="project_structure.html">Project Structure</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">jax-disk2D</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Default Parameters</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/default_parameters.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="default-parameters">
+<h1>Default Parameters<a class="headerlink" href="#default-parameters" title="Link to this heading"></a></h1>
+<p>This page documents the default parameters for FARGO3D simulations and PINN training configurations.</p>
+<section id="fargo3d-parameters">
+<h2>FARGO3D Parameters<a class="headerlink" href="#fargo3d-parameters" title="Link to this heading"></a></h2>
+<p>These parameters configure FARGO3D simulations for generating reference solutions and validation data. The parameters below are taken from the <code class="docutils literal notranslate"><span class="pre">fargo2_run.yml</span></code> configuration file.</p>
+<p>For comprehensive documentation on FARGO3D parameters and their usage, please refer to the <a class="reference external" href="https://fargo3d.github.io/documentation/index.html">FARGO3D User Guide</a>.</p>
+<section id="disk-parameters">
+<h3>Disk Parameters<a class="headerlink" href="#disk-parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>AspectRatio</strong> (<code class="docutils literal notranslate"><span class="pre">0.05</span></code>): Disk aspect ratio H/R, where H is the disk scale height and R is the radial distance. Controls the vertical thickness of the disk.</p></li>
+<li><p><strong>Sigma0</strong> (<code class="docutils literal notranslate"><span class="pre">1.0</span></code>): Reference surface density at the reference radius. Sets the overall mass scale of the disk.</p></li>
+<li><p><strong>Nu</strong> (<code class="docutils literal notranslate"><span class="pre">1.0e-5</span></code>): Kinematic viscosity coefficient. Controls the strength of viscous diffusion in the disk.</p></li>
+<li><p><strong>SigmaSlope</strong> (<code class="docutils literal notranslate"><span class="pre">0.0</span></code>): Power-law slope for the initial surface density profile. A value of 0.0 means uniform surface density.</p></li>
+<li><p><strong>FlaringIndex</strong> (<code class="docutils literal notranslate"><span class="pre">0.0</span></code>): Disk flaring index. Controls how the disk scale height varies with radius. A value of 0.0 means no flaring.</p></li>
+<li><p><strong>DampingZone</strong> (<code class="docutils literal notranslate"><span class="pre">1.15</span></code>): Radial range for applying damping zones (in period-ratios). Values smaller than 1.0 disable damping. Damping zones prevent wave reflections at boundaries.</p></li>
+<li><p><strong>TauDamp</strong> (<code class="docutils literal notranslate"><span class="pre">0.3</span></code>): Characteristic damping time in units of the inverse local orbital frequency. Higher values result in weaker damping.</p></li>
+</ul>
+</section>
+<section id="planet-parameters">
+<h3>Planet Parameters<a class="headerlink" href="#planet-parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>PlanetMass</strong> (<code class="docutils literal notranslate"><span class="pre">1e-03</span></code>): Mass of the planet in units of the central star mass. Controls the strength of planet-disk gravitational interactions.</p></li>
+<li><p><strong>PlanetMassFile</strong> (<code class="docutils literal notranslate"><span class="pre">cfg</span></code>): Source for planet mass data. Can be <code class="docutils literal notranslate"><span class="pre">cfg</span></code> to use configuration file values or a file path.</p></li>
+<li><p><strong>PlanetConfig</strong> (<code class="docutils literal notranslate"><span class="pre">planets/jupiter.cfg</span></code>): Path to the planet configuration file containing orbital parameters.</p></li>
+<li><p><strong>ThicknessSmoothing</strong> (<code class="docutils literal notranslate"><span class="pre">0.6</span></code>): Smoothing length for the planet’s gravitational potential in units of the disk scale height. Prevents numerical singularities near the planet.</p></li>
+<li><p><strong>RocheSmoothing</strong> (<code class="docutils literal notranslate"><span class="pre">0.0</span></code>): Smoothing length based on the planet’s Roche radius. A value of 0.0 disables Roche-based smoothing.</p></li>
+<li><p><strong>Eccentricity</strong> (<code class="docutils literal notranslate"><span class="pre">0.0</span></code>): Initial orbital eccentricity of the planet. A value of 0.0 means a circular orbit.</p></li>
+<li><p><strong>ExcludeHill</strong> (<code class="docutils literal notranslate"><span class="pre">no</span></code>): Whether to exclude the Hill sphere region from the computation. Options: <code class="docutils literal notranslate"><span class="pre">yes</span></code> or <code class="docutils literal notranslate"><span class="pre">no</span></code>.</p></li>
+<li><p><strong>IndirectTerm</strong> (<code class="docutils literal notranslate"><span class="pre">yes</span></code>): Whether to include the indirect term (acceleration of the coordinate frame) due to planet-star gravitational interaction. Options: <code class="docutils literal notranslate"><span class="pre">yes</span></code> or <code class="docutils literal notranslate"><span class="pre">no</span></code>.</p></li>
+</ul>
+</section>
+<section id="mesh-parameters">
+<h3>Mesh Parameters<a class="headerlink" href="#mesh-parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Nx</strong> (<code class="docutils literal notranslate"><span class="pre">1536</span></code>): Number of grid cells in the azimuthal (X) direction.</p></li>
+<li><p><strong>Ny</strong> (<code class="docutils literal notranslate"><span class="pre">1024</span></code>): Number of grid cells in the radial (Y) direction.</p></li>
+<li><p><strong>Xmin</strong> (<code class="docutils literal notranslate"><span class="pre">-3.14159265358979323844</span></code>): Minimum azimuthal coordinate (typically -π for a full disk).</p></li>
+<li><p><strong>Xmax</strong> (<code class="docutils literal notranslate"><span class="pre">3.14159265358979323844</span></code>): Maximum azimuthal coordinate (typically +π for a full disk).</p></li>
+<li><p><strong>Ymin</strong> (<code class="docutils literal notranslate"><span class="pre">0.4</span></code>): Inner radial boundary of the computational domain.</p></li>
+<li><p><strong>Ymax</strong> (<code class="docutils literal notranslate"><span class="pre">2.5</span></code>): Outer radial boundary of the computational domain.</p></li>
+<li><p><strong>OmegaFrame</strong> (<code class="docutils literal notranslate"><span class="pre">1.0005</span></code>): Angular velocity of the rotating reference frame. Often set slightly above the planet’s orbital frequency to account for migration.</p></li>
+<li><p><strong>Frame</strong> (<code class="docutils literal notranslate"><span class="pre">G</span></code>): Reference frame type. <code class="docutils literal notranslate"><span class="pre">G</span></code> indicates a rotating frame corotating with the planet.</p></li>
+</ul>
+</section>
+<section id="output-control-parameters">
+<h3>Output Control Parameters<a class="headerlink" href="#output-control-parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>DT</strong> (<code class="docutils literal notranslate"><span class="pre">0.314159265359</span></code>): Time interval between output snapshots in code units. For this configuration, one orbit equals approximately 20 DT.</p></li>
+<li><p><strong>Ninterm</strong> (<code class="docutils literal notranslate"><span class="pre">5</span></code>): Number of intermediate time steps between outputs.</p></li>
+<li><p><strong>Ntot</strong> (<code class="docutils literal notranslate"><span class="pre">100</span></code>): Total number of output snapshots to produce.</p></li>
+<li><p><strong>OutputDir</strong> (<code class="docutils literal notranslate"><span class="pre">&#64;outputs</span></code>): Directory for storing FARGO3D output files. The <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> symbol indicates a path relative to the run directory.</p></li>
+</ul>
+</section>
+<section id="plotting-parameters">
+<h3>Plotting Parameters<a class="headerlink" href="#plotting-parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>PlotLog</strong> (<code class="docutils literal notranslate"><span class="pre">yes</span></code>): Whether to use logarithmic scale for plotting. Options: <code class="docutils literal notranslate"><span class="pre">yes</span></code> or <code class="docutils literal notranslate"><span class="pre">no</span></code>.</p></li>
+</ul>
+</section>
+</section>
+<section id="pinn-training-parameters">
+<h2>PINN Training Parameters<a class="headerlink" href="#pinn-training-parameters" title="Link to this heading"></a></h2>
+<p>Training is configured through <code class="docutils literal notranslate"><span class="pre">parameters.yml</span></code>. The default configuration represents a high-performance setup optimized for accurate long-term evolution. All parameters are documented below with their default values.</p>
+<section id="network-architecture-parameters">
+<h3>Network Architecture Parameters<a class="headerlink" href="#network-architecture-parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>layer_size</strong> (<code class="docutils literal notranslate"><span class="pre">32,32,32,32,32,32,32,32,32</span></code>): Hidden layer sizes for the multi-layer perceptron (MLP). The default configuration uses 9 hidden layers with 32 neurons each. This provides sufficient capacity for learning complex spatiotemporal dynamics.</p></li>
+<li><p><strong>activation</strong> (<code class="docutils literal notranslate"><span class="pre">stan</span></code>): Activation function for the neural network. Options include <code class="docutils literal notranslate"><span class="pre">sin</span></code>, <code class="docutils literal notranslate"><span class="pre">tanh</span></code>, <code class="docutils literal notranslate"><span class="pre">swish</span></code>, and <code class="docutils literal notranslate"><span class="pre">stan</span></code>. The <code class="docutils literal notranslate"><span class="pre">stan</span></code> activation is a smooth, periodic activation function well-suited for physical systems.</p></li>
+<li><p><strong>initializer</strong> (<code class="docutils literal notranslate"><span class="pre">glorot_normal</span></code>): Weight initialization method. Options include <code class="docutils literal notranslate"><span class="pre">glorot_uniform</span></code>, <code class="docutils literal notranslate"><span class="pre">glorot_normal</span></code>, <code class="docutils literal notranslate"><span class="pre">lecun_uniform</span></code>, <code class="docutils literal notranslate"><span class="pre">lecun_normal</span></code>, <code class="docutils literal notranslate"><span class="pre">he_uniform</span></code>, <code class="docutils literal notranslate"><span class="pre">he_normal</span></code>, and <code class="docutils literal notranslate"><span class="pre">sine_uniform</span></code>. Glorot (Xavier) normal initialization is the default. (TODO: Check if these options are still supported)</p></li>
+<li><p><strong>enable_x64</strong> (<code class="docutils literal notranslate"><span class="pre">no</span></code>): Whether to use 64-bit floating point precision in JAX. Set to <code class="docutils literal notranslate"><span class="pre">yes</span></code> for higher precision but slower computation. Default is <code class="docutils literal notranslate"><span class="pre">no</span></code> (32-bit).</p></li>
+</ul>
+</section>
+<section id="training-configuration-parameters">
+<h3>Training Configuration Parameters<a class="headerlink" href="#training-configuration-parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>num_epochs</strong> (<code class="docutils literal notranslate"><span class="pre">6400000</span></code>): Total number of training iterations. The high-performance default uses 6.4 million epochs for thorough convergence.</p></li>
+<li><p><strong>lr</strong> (<code class="docutils literal notranslate"><span class="pre">0.001</span></code>): Learning rate for the Adam optimizer. Controls the step size during gradient descent.</p></li>
+<li><p><strong>decay_rate</strong> (<code class="docutils literal notranslate"><span class="pre">0.9</span></code>): Learning rate decay rate. The learning rate is multiplied by this factor every <code class="docutils literal notranslate"><span class="pre">transition_steps</span></code> iterations.</p></li>
+<li><p><strong>transition_steps</strong> (<code class="docutils literal notranslate"><span class="pre">5000</span></code>): Number of steps per learning rate decay period. Used together with <code class="docutils literal notranslate"><span class="pre">decay_rate</span></code> to implement exponential learning rate decay.</p></li>
+<li><p><strong>random_seed</strong> (<code class="docutils literal notranslate"><span class="pre">123</span></code>): Random seed for reproducibility. Ensures consistent random number generation for sampling and initialization.</p></li>
+</ul>
+</section>
+<section id="sampling-parameters">
+<h3>Sampling Parameters<a class="headerlink" href="#sampling-parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>num_domain</strong> (<code class="docutils literal notranslate"><span class="pre">10000</span></code>): Number of collocation points sampled in the spatiotemporal domain for evaluating PDE residuals. Higher values provide better coverage but increase computational cost.</p></li>
+<li><p><strong>num_boundary</strong> (<code class="docutils literal notranslate"><span class="pre">0</span></code>): Number of training samples on the domain boundaries. Set to 0 in the default configuration as the boundary-free approach is used.</p></li>
+<li><p><strong>num_initial</strong> (<code class="docutils literal notranslate"><span class="pre">0</span></code>): Number of training samples for the initial condition. Set to 0 when using hard initial condition enforcement (see <code class="docutils literal notranslate"><span class="pre">ic</span></code> parameter).</p></li>
+<li><p><strong>num_period_sample</strong> (<code class="docutils literal notranslate"><span class="pre">10</span></code>): Period (in training steps) for resampling PDE domain collocation points. Resampling helps the network learn from different regions of the domain throughout training.</p></li>
+</ul>
+</section>
+<section id="initial-and-boundary-condition-parameters">
+<h3>Initial and Boundary Condition Parameters<a class="headerlink" href="#initial-and-boundary-condition-parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>ic</strong> (<code class="docutils literal notranslate"><span class="pre">hard</span></code>): Initial condition handling method. Options:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">hard</span></code>: Applies time-suppressed exact initial condition enforcement</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">shift</span></code>: Adds initial condition to network outputs</p></li>
+<li><p>Empty string: Disables initial condition transform</p></li>
+</ul>
+</li>
+<li><p><strong>bc</strong> (<code class="docutils literal notranslate"><span class="pre">ignore</span></code>): Boundary condition handling. Options:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">ignore</span></code>: Disables boundary condition losses (boundary-free approach)</p></li>
+<li><p>Empty string: Uses FARGO3D boundary condition types</p></li>
+</ul>
+</li>
+<li><p><strong>scale_on_hardic</strong> (<code class="docutils literal notranslate"><span class="pre">1.0</span></code>): Scale factor in the time-suppressor for hard initial conditions. Larger values mean faster release of the initial condition constraint.</p></li>
+</ul>
+</section>
+<section id="output-scaling-parameters">
+<h3>Output Scaling Parameters<a class="headerlink" href="#output-scaling-parameters" title="Link to this heading"></a></h3>
+<p>These parameters scale the network outputs to match the physical magnitudes of the solution variables:</p>
+<ul class="simple">
+<li><p><strong>scale_on_sigma</strong> (<code class="docutils literal notranslate"><span class="pre">0.1</span></code>): Output scaling factor for surface density (Σ)</p></li>
+<li><p><strong>scale_on_v_r</strong> (<code class="docutils literal notranslate"><span class="pre">0.001</span></code>): Output scaling factor for radial velocity (v_r)</p></li>
+<li><p><strong>scale_on_v_theta</strong> (<code class="docutils literal notranslate"><span class="pre">0.001</span></code>): Output scaling factor for azimuthal velocity (v_θ)</p></li>
+<li><p><strong>scale_on_t</strong> (<code class="docutils literal notranslate"><span class="pre">1.0</span></code>): Scaling applied to the time channel in periodic input transform</p></li>
+</ul>
+</section>
+<section id="time-marching-parameters">
+<h3>Time-Marching Parameters<a class="headerlink" href="#time-marching-parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>time_folds</strong> (<code class="docutils literal notranslate"><span class="pre">0,0.03125|(-0.00625,</span> <span class="pre">0.03125)*31</span></code>): Time window configuration for time-marching training. This parameter partitions the total simulation time into overlapping windows, each with its own neural network. The format is relative [start, width] segments that sum to 1.0. The default configuration uses 32 overlapping time windows.</p></li>
+</ul>
+</section>
+<section id="loss-and-gradient-computation-parameters">
+<h3>Loss and Gradient Computation Parameters<a class="headerlink" href="#loss-and-gradient-computation-parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>g_compute_method</strong> (<code class="docutils literal notranslate"><span class="pre">initial_loss_weighted_sum</span></code>): Method for aggregating per-loss gradients. Options:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">sum</span></code>: Simple sum of all loss gradients</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ntk_weighted_sum</span></code>: Neural Tangent Kernel (NTK) weighted sum</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">initial_loss_weighted_sum</span></code>: Weighted by initial loss values (default)</p></li>
+</ul>
+</li>
+<li><p><strong>number_period_update_weights</strong> (<code class="docutils literal notranslate"><span class="pre">100</span></code>): Period (in training steps) to update adaptive loss weights when using NTK or initial loss weighting methods.</p></li>
+</ul>
+</section>
+<section id="logging-and-checkpointing-parameters">
+<h3>Logging and Checkpointing Parameters<a class="headerlink" href="#logging-and-checkpointing-parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>num_period_log</strong> (<code class="docutils literal notranslate"><span class="pre">100</span></code>): Period (in training steps) for logging loss values to TensorBoard.</p></li>
+<li><p><strong>num_period_log_scaling_factors</strong> (<code class="docutils literal notranslate"><span class="pre">100</span></code>): Period for logging raw output magnitudes. Set to 0 to disable.</p></li>
+<li><p><strong>num_period_save_models</strong> (<code class="docutils literal notranslate"><span class="pre">10000</span></code>): Period (in training steps) for saving intermediate model checkpoints.</p></li>
+<li><p><strong>log_stats_g</strong> (<code class="docutils literal notranslate"><span class="pre">no</span></code>): Whether to log gradient statistics to TensorBoard.</p></li>
+<li><p><strong>save</strong> (<code class="docutils literal notranslate"><span class="pre">yes</span></code>): Whether to write models, logs, and NetCDF outputs to the save directory.</p></li>
+<li><p><strong>save_dir</strong> (<code class="docutils literal notranslate"><span class="pre">.</span></code>): Output directory for checkpoints, logs, and generated artifacts.</p></li>
+</ul>
+</section>
+<section id="fargo3d-integration-parameters">
+<h3>FARGO3D Integration Parameters<a class="headerlink" href="#fargo3d-integration-parameters" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>fargo_setups</strong> (<code class="docutils literal notranslate"><span class="pre">fargo2</span></code>): FARGO3D setup name used to load physical parameters and configuration.</p></li>
+<li><p><strong>fargo_source_dir</strong> (<code class="docutils literal notranslate"><span class="pre">fargo3d</span></code>): Path to FARGO3D project or outputs directory containing configuration files and test data.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pinn_training.html" class="btn btn-neutral float-left" title="PINN Training" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="project_structure.html" class="btn btn-neutral float-right" title="Project Structure" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Shunyuan Mao, Weiqi Wang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
