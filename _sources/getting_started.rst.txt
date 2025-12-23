@@ -133,7 +133,7 @@ Then submit it to a GPU node using SLURM:
 
 .. code-block:: bash
 
-   sbatch --time=40:00 --account=<account> --gres=gpu:h100:1--mem=64G run_gpu.sh <run_job_id>
+   sbatch --time=40:00 --account=<account> --gres=gpu:h100:1 --mem=64G run_gpu.sh <run_job_id>
 
 Replace ``<run_job_id>`` with the Guild run ID from the previous command, and ``<account>`` with your compute allocation.
 
@@ -141,7 +141,7 @@ Replace ``<run_job_id>`` with the Guild run ID from the previous command, and ``
 
 * ``--time``: Maximum walltime for the job (format: hours:minutes)
 * ``--account``: Your compute allocation account
-* ``--gres=gpu:1``: Request one H100 GPU
+* ``--gres=gpu:h100:1``: Request one H100 GPU
 * ``--mem``: Memory allocation (e.g., 64G for 64 GB)
 
 Adjust these parameters based on your specific needs and available resources. See `<https://docs.alliancecan.ca/wiki/Running_jobs>`_ for more information on how to submit jobs to GPU compute nodes.
@@ -149,6 +149,7 @@ Adjust these parameters based on your specific needs and available resources. Se
 Next Steps
 ----------
 
+* See :doc:`huggingface` to download pre-computed FARGO3D data and trained PINN models
 * See :doc:`default_parameters` for detailed parameter documentation
 * See :doc:`project_structure` for repository organization
 

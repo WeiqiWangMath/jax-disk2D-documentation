@@ -6,10 +6,10 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hugging Face Integration &mdash; jax-disk2D 0.0.1 documentation</title>
+  <title>Downloading Pre-computed Data &mdash; jax-disk2D 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=2293ad74" />
+      <link rel="stylesheet" type="text/css" href="_static/sync_videos.css?v=2293ad74" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
@@ -21,8 +21,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="API Reference" href="api_reference.html" />
-    <link rel="prev" title="PINN Training" href="pinn_training.html" /> 
+    <link rel="next" title="Default Parameters" href="default_parameters.html" />
+    <link rel="prev" title="Getting Started" href="getting_started.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -49,18 +49,29 @@
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="fargo_integration.html">FARGO3D Integration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pinn_training.html">PINN Training</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Hugging Face Integration</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#downloading-data-from-hugging-face">Downloading Data from Hugging Face</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Downloading Pre-computed Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#available-datasets">Available Datasets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fargo3d-simulation-data">FARGO3D Simulation Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pinn-training-runs">PINN Training Runs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#downloading-data">Downloading Data</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#usage">Usage</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#parameters">Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#download-all-data">Download All Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#download-specific-runs">Download Specific Runs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#command-line-options">Command Line Options</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#using-downloaded-data">Using Downloaded Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#using-fargo3d-data-for-training">Using FARGO3D Data for Training</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#examining-pre-trained-models">Examining Pre-trained Models</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="api_reference.html">API Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="default_parameters.html">Default Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project_structure.html">Project Structure</a></li>
 </ul>
 
         </div>
@@ -77,7 +88,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Hugging Face Integration</li>
+      <li class="breadcrumb-item active">Downloading Pre-computed Data</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/huggingface.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -87,39 +98,110 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="hugging-face-integration">
-<h1>Hugging Face Integration<a class="headerlink" href="#hugging-face-integration" title="Link to this heading"></a></h1>
-<p>jax-disk2D provides integration with Hugging Face for downloading pre-computed simulation data and model checkpoints.</p>
-<section id="downloading-data-from-hugging-face">
-<h2>Downloading Data from Hugging Face<a class="headerlink" href="#downloading-data-from-hugging-face" title="Link to this heading"></a></h2>
-<p>Use the <code class="docutils literal notranslate"><span class="pre">download_data.py</span></code> helper script to download data snapshots stored on Hugging Face. The script wraps <code class="docutils literal notranslate"><span class="pre">huggingface_hub.snapshot_download</span></code> and allows you to limit the download to selected run folders.</p>
+  <section id="downloading-pre-computed-data">
+<h1>Downloading Pre-computed Data<a class="headerlink" href="#downloading-pre-computed-data" title="Link to this heading"></a></h1>
+<p>To help you get started quickly, we provide pre-computed FARGO3D simulation data and trained PINN models on Hugging Face. You can download these datasets instead of running lengthy simulations or training from scratch.</p>
+<p><strong>Hugging Face Dataset</strong>: <a class="reference external" href="https://huggingface.co/datasets/WeiqiWangMath/jax-disk2D-runs">WeiqiWangMath/jax-disk2D-runs</a></p>
+<section id="available-datasets">
+<h2>Available Datasets<a class="headerlink" href="#available-datasets" title="Link to this heading"></a></h2>
+<p>The following pre-computed runs are available for download. For detailed parameter explanations, see <a class="reference internal" href="default_parameters.html"><span class="doc">Default Parameters</span></a>.</p>
+<section id="fargo3d-simulation-data">
+<h3>FARGO3D Simulation Data<a class="headerlink" href="#fargo3d-simulation-data" title="Link to this heading"></a></h3>
+<p>These are converted FARGO3D simulation outputs in NetCDF format, ready for PINN training:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">0a0ae0abd3ad4e758a35b28b0616686a</span></code> — PlanetMass 1e-3, AspectRatio 0.1</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ebf661d56a3e4c6d975ed69d4ebeca1b</span></code> — PlanetMass 1e-3, AspectRatio 0.05 (default parameters)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fd216a503a274181987e24636f40f154</span></code> — PlanetMass 1e-4, AspectRatio 0.05</p></li>
+</ul>
+</section>
+<section id="pinn-training-runs">
+<h3>PINN Training Runs<a class="headerlink" href="#pinn-training-runs" title="Link to this heading"></a></h3>
+<p>Pre-trained PINN models with training logs and results:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">333a2fb279754acfb79edf8c581f51ab</span></code> — Sample PINN training run based on <code class="docutils literal notranslate"><span class="pre">ebf661d56a3e4c6d975ed69d4ebeca1b</span></code>. Uses default training parameters (9×32 MLP, <code class="docutils literal notranslate"><span class="pre">stan</span></code> activation, 6.4M epochs). Includes TensorBoard logs.</p></li>
+</ul>
+</section>
+</section>
+<section id="downloading-data">
+<h2>Downloading Data<a class="headerlink" href="#downloading-data" title="Link to this heading"></a></h2>
+<p><strong>Important Notes:</strong></p>
+<ul class="simple">
+<li><p><strong>Storage space</strong>: Each run can be several GB in size. Download only what you need using the <code class="docutils literal notranslate"><span class="pre">--folders</span></code> option.</p></li>
+<li><p><strong>Guild AI integration</strong>: Make sure the downloaded data is in your <code class="docutils literal notranslate"><span class="pre">$GUILD_HOME</span></code> directory or accessible to Guild AI.</p></li>
+</ul>
 <section id="prerequisites">
 <h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h3>
-<p>Ensure <code class="docutils literal notranslate"><span class="pre">huggingface_hub</span></code> is installed:</p>
+<p>First, activate your Python virtual environment (see <a class="reference internal" href="installation.html"><span class="doc">Installation</span></a> for setup):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>&lt;workspace-dir&gt;/jax-disk2D-venv/bin/activate
+</pre></div>
+</div>
+<p>Then install the Hugging Face Hub library:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>huggingface_hub
 </pre></div>
 </div>
-<p>The script will emit a helpful message if the package is missing.</p>
 </section>
-<section id="usage">
-<h3>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h3>
-<p>From the repository root, run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>download_data.py<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--repo-id<span class="w"> </span>WeiqiWangMath/jax-disk2D-runs<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--local-dir<span class="w"> </span>&lt;your-guild-home-dir&gt;<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--folders<span class="w"> </span>0a0ae0abd3ad4e758a35b28b0616686a<span class="w"> </span>another_run_id
+<section id="download-all-data">
+<h3>Download All Data<a class="headerlink" href="#download-all-data" title="Link to this heading"></a></h3>
+<p>To download all available runs:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>download_data.py
+</pre></div>
+</div>
+<p>This downloads everything to <code class="docutils literal notranslate"><span class="pre">./jax-disk2D-runs/</span></code> by default.</p>
+</section>
+<section id="download-specific-runs">
+<h3>Download Specific Runs<a class="headerlink" href="#download-specific-runs" title="Link to this heading"></a></h3>
+<p>To download only specific runs, use the <code class="docutils literal notranslate"><span class="pre">--folders</span></code> option with the run IDs:</p>
+<p><strong>Download a single FARGO3D run:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>download_data.py<span class="w"> </span>--folders<span class="w"> </span>ebf661d56a3e4c6d975ed69d4ebeca1b
+</pre></div>
+</div>
+<p><strong>Download multiple runs:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>download_data.py<span class="w"> </span>--folders<span class="w"> </span>ebf661d56a3e4c6d975ed69d4ebeca1b<span class="w"> </span>333a2fb279754acfb79edf8c581f51ab
+</pre></div>
+</div>
+<p><strong>Download to a custom directory:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>download_data.py<span class="w"> </span>--local-dir<span class="w"> </span>/path/to/custom/directory<span class="w"> </span>--folders<span class="w"> </span>ebf661d56a3e4c6d975ed69d4ebeca1b
 </pre></div>
 </div>
 </section>
-<section id="parameters">
-<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
+<section id="command-line-options">
+<h3>Command Line Options<a class="headerlink" href="#command-line-options" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">download_data.py</span></code> script accepts the following options:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">--repo-id</span></code>: The Hugging Face repository ID (e.g., <code class="docutils literal notranslate"><span class="pre">WeiqiWangMath/jax-disk2D-runs</span></code>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--local-dir</span></code>: Your local Guild home directory where the data should be downloaded</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--folders</span></code>: (Optional) Specific run folder IDs to download. If omitted, all folders will be downloaded.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--repo-id</span></code>: Hugging Face dataset repository ID (default: <code class="docutils literal notranslate"><span class="pre">WeiqiWangMath/jax-disk2D-runs</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--local-dir</span></code>: Local directory to save downloaded data (default: <code class="docutils literal notranslate"><span class="pre">./jax-disk2D-runs</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--folders</span></code>: Space-separated list of run IDs to download (downloads all if not specified)</p></li>
 </ul>
-<p>The downloaded data will be organized in your Guild home directory structure, making it compatible with the existing Guild AI workflow.</p>
 </section>
+</section>
+<section id="using-downloaded-data">
+<h2>Using Downloaded Data<a class="headerlink" href="#using-downloaded-data" title="Link to this heading"></a></h2>
+<section id="using-fargo3d-data-for-training">
+<h3>Using FARGO3D Data for Training<a class="headerlink" href="#using-fargo3d-data-for-training" title="Link to this heading"></a></h3>
+<p>After downloading a FARGO3D run, you can use it directly for PINN training. The run ID corresponds to the <code class="docutils literal notranslate"><span class="pre">to_xarray</span></code> job ID:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>guild<span class="w"> </span>run<span class="w"> </span>pinn:train<span class="w"> </span>@parameters.yml<span class="w"> </span>fargo:to_xarray<span class="o">=</span>ebf661d56a3e4c6d975ed69d4ebeca1b
+</pre></div>
+</div>
+</section>
+<section id="examining-pre-trained-models">
+<h3>Examining Pre-trained Models<a class="headerlink" href="#examining-pre-trained-models" title="Link to this heading"></a></h3>
+<p>Downloaded PINN training runs include:</p>
+<ul class="simple">
+<li><p><strong>Model checkpoints</strong>: Saved neural network weights at various training stages</p></li>
+<li><p><strong>TensorBoard logs</strong>: Training metrics and loss curves in the <code class="docutils literal notranslate"><span class="pre">runs/</span></code> subdirectory</p></li>
+<li><p><strong>Configuration files</strong>: Training parameters and setup details</p></li>
+<li><p><strong>Output visualizations</strong>: Generated plots and movies (if available)</p></li>
+</ul>
+</section>
+</section>
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading"></a></h2>
+<p>After downloading data:</p>
+<ul class="simple">
+<li><p>Use FARGO3D runs to train your own PINN models (see <a class="reference internal" href="getting_started.html"><span class="doc">Getting Started</span></a>)</p></li>
+<li><p>Examine pre-trained models to understand training dynamics</p></li>
+<li><p>Use as reference data for validation</p></li>
+</ul>
 </section>
 </section>
 
@@ -127,8 +209,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="pinn_training.html" class="btn btn-neutral float-left" title="PINN Training" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="api_reference.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="getting_started.html" class="btn btn-neutral float-left" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="default_parameters.html" class="btn btn-neutral float-right" title="Default Parameters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

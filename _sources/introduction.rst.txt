@@ -36,27 +36,18 @@ In jax-disk2D, the PINN maps spatiotemporal coordinates (radius, azimuth, time) 
 * **Initial conditions**: The system's state at t = 0
 * **Boundary conditions**: Physical constraints at domain boundaries
 
-Key Features
-------------
+This implementation successfully reproduces key physical phenomena in accretion disk dynamics, including spiral density waves, gap formation, and long-term stable evolution. The boundary-free approach enabled by PINNs naturally suppresses spurious wave reflections at disk edges, which are challenging to eliminate in traditional numerical simulations that require explicit boundary conditions and damping zones.
 
-* **Data-Free Learning**: Train neural networks directly on physical laws without requiring precomputed simulation data
-* **Continuous Solutions**: Obtain solutions at arbitrary times and locations within the training domain, not limited to discretized grids
-* **Boundary-Free Approach**: Naturally eliminates spurious wave reflections at disk edges without explicit wave-killing mechanisms
-* **Time-Marching Strategy**: Decomposes long-term evolution into manageable time intervals for stable training
-* **FARGO3D Integration**: Validate PINN solutions against traditional numerical simulations
-* **JAX-based**: Leverage JAX for high-performance automatic differentiation and GPU acceleration
-* **Guild AI Workflow**: Use Guild AI for experiment management and reproducibility
+Documentation Guide
+-------------------
 
-Scientific Impact
------------------
+This documentation is organized to help you get started quickly and find detailed information as needed:
 
-This implementation successfully reproduces key physical phenomena in accretion disk dynamics, including:
-
-* **Spiral density waves**: Excitation and propagation of density waves from disk-companion interactions
-* **Gap formation**: Opening of gaps in the disk due to companion interactions
-* **Long-term evolution**: Stable solutions over extended timescales
-
-The boundary-free approach enabled by PINNs naturally suppresses spurious wave reflections at disk edges, which are challenging to eliminate in traditional numerical simulations that require explicit boundary conditions and damping zones.
+* **Installation**: Step-by-step guide for setting up jax-disk2D on computers with GPU, using ComputeCanada HPC clusters as an example
+* **Getting Started**: Complete workflow from running FARGO3D simulations through training PINN models to visualizing results
+* **Downloading Pre-computed Data**: Access pre-existing FARGO3D runs and trained PINN models from Hugging Face to skip lengthy simulations
+* **Default Parameters**: Comprehensive reference for all FARGO3D simulation and PINN training parameters with detailed explanations
+* **Project Structure**: Overview of the repository organization with detailed descriptions of all modules and files
 
 References
 ----------

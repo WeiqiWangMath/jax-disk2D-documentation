@@ -48,13 +48,13 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#what-are-physics-informed-neural-networks">What are Physics-Informed Neural Networks?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#key-features">Key Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#scientific-impact">Scientific Impact</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation-guide">Documentation Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="huggingface.html">Downloading Pre-computed Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="default_parameters.html">Default Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="project_structure.html">Project Structure</a></li>
 </ul>
@@ -112,28 +112,18 @@
 <li><p><strong>Initial conditions</strong>: The system’s state at t = 0</p></li>
 <li><p><strong>Boundary conditions</strong>: Physical constraints at domain boundaries</p></li>
 </ul>
+<p>This implementation successfully reproduces key physical phenomena in accretion disk dynamics, including spiral density waves, gap formation, and long-term stable evolution. The boundary-free approach enabled by PINNs naturally suppresses spurious wave reflections at disk edges, which are challenging to eliminate in traditional numerical simulations that require explicit boundary conditions and damping zones.</p>
 </section>
-<section id="key-features">
-<h2>Key Features<a class="headerlink" href="#key-features" title="Link to this heading"></a></h2>
+<section id="documentation-guide">
+<h2>Documentation Guide<a class="headerlink" href="#documentation-guide" title="Link to this heading"></a></h2>
+<p>This documentation is organized to help you get started quickly and find detailed information as needed:</p>
 <ul class="simple">
-<li><p><strong>Data-Free Learning</strong>: Train neural networks directly on physical laws without requiring precomputed simulation data</p></li>
-<li><p><strong>Continuous Solutions</strong>: Obtain solutions at arbitrary times and locations within the training domain, not limited to discretized grids</p></li>
-<li><p><strong>Boundary-Free Approach</strong>: Naturally eliminates spurious wave reflections at disk edges without explicit wave-killing mechanisms</p></li>
-<li><p><strong>Time-Marching Strategy</strong>: Decomposes long-term evolution into manageable time intervals for stable training</p></li>
-<li><p><strong>FARGO3D Integration</strong>: Validate PINN solutions against traditional numerical simulations</p></li>
-<li><p><strong>JAX-based</strong>: Leverage JAX for high-performance automatic differentiation and GPU acceleration</p></li>
-<li><p><strong>Guild AI Workflow</strong>: Use Guild AI for experiment management and reproducibility</p></li>
+<li><p><strong>Installation</strong>: Step-by-step guide for setting up jax-disk2D on computers with GPU, using ComputeCanada HPC clusters as an example</p></li>
+<li><p><strong>Getting Started</strong>: Complete workflow from running FARGO3D simulations through training PINN models to visualizing results</p></li>
+<li><p><strong>Downloading Pre-computed Data</strong>: Access pre-existing FARGO3D runs and trained PINN models from Hugging Face to skip lengthy simulations</p></li>
+<li><p><strong>Default Parameters</strong>: Comprehensive reference for all FARGO3D simulation and PINN training parameters with detailed explanations</p></li>
+<li><p><strong>Project Structure</strong>: Overview of the repository organization with detailed descriptions of all modules and files</p></li>
 </ul>
-</section>
-<section id="scientific-impact">
-<h2>Scientific Impact<a class="headerlink" href="#scientific-impact" title="Link to this heading"></a></h2>
-<p>This implementation successfully reproduces key physical phenomena in accretion disk dynamics, including:</p>
-<ul class="simple">
-<li><p><strong>Spiral density waves</strong>: Excitation and propagation of density waves from disk-companion interactions</p></li>
-<li><p><strong>Gap formation</strong>: Opening of gaps in the disk due to companion interactions</p></li>
-<li><p><strong>Long-term evolution</strong>: Stable solutions over extended timescales</p></li>
-</ul>
-<p>The boundary-free approach enabled by PINNs naturally suppresses spurious wave reflections at disk edges, which are challenging to eliminate in traditional numerical simulations that require explicit boundary conditions and damping zones.</p>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading"></a></h2>

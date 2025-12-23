@@ -21,7 +21,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Default Parameters" href="default_parameters.html" />
+    <link rel="next" title="Downloading Pre-computed Data" href="huggingface.html" />
     <link rel="prev" title="Installation" href="installation.html" /> 
 </head>
 
@@ -64,6 +64,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#next-steps">Next Steps</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="huggingface.html">Downloading Pre-computed Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="default_parameters.html">Default Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="project_structure.html">Project Structure</a></li>
 </ul>
@@ -188,7 +189,7 @@
 </pre></div>
 </div>
 <p>Then submit it to a GPU node using SLURM:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sbatch<span class="w"> </span>--time<span class="o">=</span><span class="m">40</span>:00<span class="w"> </span>--account<span class="o">=</span>&lt;account&gt;<span class="w"> </span>--gres<span class="o">=</span>gpu:h100:1--mem<span class="o">=</span>64G<span class="w"> </span>run_gpu.sh<span class="w"> </span>&lt;run_job_id&gt;
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sbatch<span class="w"> </span>--time<span class="o">=</span><span class="m">40</span>:00<span class="w"> </span>--account<span class="o">=</span>&lt;account&gt;<span class="w"> </span>--gres<span class="o">=</span>gpu:h100:1<span class="w"> </span>--mem<span class="o">=</span>64G<span class="w"> </span>run_gpu.sh<span class="w"> </span>&lt;run_job_id&gt;
 </pre></div>
 </div>
 <p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;run_job_id&gt;</span></code> with the Guild run ID from the previous command, and <code class="docutils literal notranslate"><span class="pre">&lt;account&gt;</span></code> with your compute allocation.</p>
@@ -196,7 +197,7 @@
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">--time</span></code>: Maximum walltime for the job (format: hours:minutes)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--account</span></code>: Your compute allocation account</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--gres=gpu:1</span></code>: Request one H100 GPU</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--gres=gpu:h100:1</span></code>: Request one H100 GPU</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--mem</span></code>: Memory allocation (e.g., 64G for 64 GB)</p></li>
 </ul>
 <p>Adjust these parameters based on your specific needs and available resources. See <a class="reference external" href="https://docs.alliancecan.ca/wiki/Running_jobs">https://docs.alliancecan.ca/wiki/Running_jobs</a> for more information on how to submit jobs to GPU compute nodes.</p>
@@ -204,6 +205,7 @@
 <section id="next-steps">
 <h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading"></a></h2>
 <ul class="simple">
+<li><p>See <a class="reference internal" href="huggingface.html"><span class="doc">Downloading Pre-computed Data</span></a> to download pre-computed FARGO3D data and trained PINN models</p></li>
 <li><p>See <a class="reference internal" href="default_parameters.html"><span class="doc">Default Parameters</span></a> for detailed parameter documentation</p></li>
 <li><p>See <a class="reference internal" href="project_structure.html"><span class="doc">Project Structure</span></a> for repository organization</p></li>
 </ul>
@@ -215,7 +217,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="default_parameters.html" class="btn btn-neutral float-right" title="Default Parameters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="huggingface.html" class="btn btn-neutral float-right" title="Downloading Pre-computed Data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
