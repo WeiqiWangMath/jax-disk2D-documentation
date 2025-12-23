@@ -49,11 +49,18 @@
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#installing-python-dependencies">Installing Python Dependencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#mpi-support">MPI Support</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#environment-variables">Environment Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#guild-ai">Guild AI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#verifying-installation">Verifying Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation-on-computecanada-clusters">Installation on ComputeCanada Clusters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#step-1-connect-to-the-cluster">Step 1: Connect to the Cluster</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-2-navigate-to-your-project-directory">Step 2: Navigate to Your Project Directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-3-clone-the-repository">Step 3: Clone the Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-4-load-required-modules">Step 4: Load Required Modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-5-create-a-virtual-environment">Step 5: Create a Virtual Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-6-install-python-dependencies">Step 6: Install Python Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-7-install-mpi4py-via-module-system">Step 7: Install mpi4py via Module System</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-8-set-up-environment-variables">Step 8: Set Up Environment Variables</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#next-steps">Next Steps</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
@@ -88,50 +95,126 @@
              
   <section id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h1>
+<p>This guide provides detailed step-by-step instructions for installing jax-disk2D on ComputeCanada clusters with GPU support. While the installation procedure is similar across different HPC platforms, we use the Fir cluster as a specific example. Users on other systems (e.g., Cedar, Graham, Narval, or other HPC clusters) should adapt the instructions accordingly, particularly the cluster hostname and module versions.</p>
+<p>For more comprehensive information about using ComputeCanada clusters, please refer to the official <a class="reference external" href="https://docs.alliancecan.ca/wiki/Technical_documentation">Alliance Canada Technical Documentation</a>.</p>
 <section id="prerequisites">
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h2>
+<p>Before you begin, ensure you have:</p>
 <ul class="simple">
-<li><p>Python 3.8 or higher</p></li>
-<li><p>pip package manager</p></li>
-<li><p>(Optional) CUDA toolkit for GPU support</p></li>
+<li><p>Access to a ComputeCanada cluster account (e.g., Fir cluster)</p></li>
+<li><p>SSH client installed on your local machine</p></li>
+<li><p>Your ComputeCanada username and password</p></li>
 </ul>
 </section>
-<section id="installing-python-dependencies">
-<h2>Installing Python Dependencies<a class="headerlink" href="#installing-python-dependencies" title="Link to this heading"></a></h2>
-<p>Clone the repository and install the required dependencies:</p>
+<section id="installation-on-computecanada-clusters">
+<h2>Installation on ComputeCanada Clusters<a class="headerlink" href="#installation-on-computecanada-clusters" title="Link to this heading"></a></h2>
+<section id="step-1-connect-to-the-cluster">
+<h3>Step 1: Connect to the Cluster<a class="headerlink" href="#step-1-connect-to-the-cluster" title="Link to this heading"></a></h3>
+<p>Open a terminal on your local machine and SSH into the cluster. Replace <code class="docutils literal notranslate"><span class="pre">&lt;username&gt;</span></code> with your ComputeCanada username:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh<span class="w"> </span>&lt;username&gt;@fir.alliancecan.ca
+</pre></div>
+</div>
+<p>When prompted, enter your password. After successful login, you will be on the login node.</p>
+<p><strong>Important</strong>: Do not run computationally intensive tasks on login nodes. They are only for file management and job submission.</p>
+</section>
+<section id="step-2-navigate-to-your-project-directory">
+<h3>Step 2: Navigate to Your Project Directory<a class="headerlink" href="#step-2-navigate-to-your-project-directory" title="Link to this heading"></a></h3>
+<p>Navigate to your project allocation space and create a working directory. Replace <code class="docutils literal notranslate"><span class="pre">&lt;project_id&gt;</span></code> with your research group’s project identifier (e.g., <code class="docutils literal notranslate"><span class="pre">def-supervisor</span></code> or <code class="docutils literal notranslate"><span class="pre">rrg-groupname</span></code>), <code class="docutils literal notranslate"><span class="pre">&lt;username&gt;</span></code> with your username, and <code class="docutils literal notranslate"><span class="pre">&lt;jax-disk2D-workdir-name&gt;</span></code> with your preferred directory name (e.g., <code class="docutils literal notranslate"><span class="pre">jax-disk2D-workspace</span></code>):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/project/&lt;project_id&gt;/&lt;username&gt;
+mkdir<span class="w"> </span>-p<span class="w"> </span>&lt;jax-disk2D-workdir-name&gt;
+<span class="nb">cd</span><span class="w"> </span>&lt;jax-disk2D-workdir-name&gt;
+</pre></div>
+</div>
+<p><strong>Note</strong>: Your <code class="docutils literal notranslate"><span class="pre">&lt;project_id&gt;</span></code> is the resource allocation identifier for your research group on ComputeCanada. You can find this by running <code class="docutils literal notranslate"><span class="pre">groups</span></code> or checking your allocation on the CCDB (ComputeCanada Database). Project space typically has much more storage than your home directory.</p>
+</section>
+<section id="step-3-clone-the-repository">
+<h3>Step 3: Clone the Repository<a class="headerlink" href="#step-3-clone-the-repository" title="Link to this heading"></a></h3>
+<p>Clone the jax-disk2D repository from GitHub:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/smao-astro/jax-disk2D.git
+<span class="nb">cd</span><span class="w"> </span>jax-disk2D
+</pre></div>
+</div>
+<p>Switch to the <code class="docutils literal notranslate"><span class="pre">code-cleanup</span></code> branch:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>code-cleanup
+</pre></div>
+</div>
+</section>
+<section id="step-4-load-required-modules">
+<h3>Step 4: Load Required Modules<a class="headerlink" href="#step-4-load-required-modules" title="Link to this heading"></a></h3>
+<p>ComputeCanada clusters use environment modules to manage software. Load the necessary modules for GPU-accelerated JAX with Python 3.11:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module<span class="w"> </span>load<span class="w"> </span>StdEnv/2023
+module<span class="w"> </span>load<span class="w"> </span>python/3.11
+module<span class="w"> </span>load<span class="w"> </span>cuda/12.2
+module<span class="w"> </span>load<span class="w"> </span>cudnn/8.9.5.29
+</pre></div>
+</div>
+</section>
+<section id="step-5-create-a-virtual-environment">
+<h3>Step 5: Create a Virtual Environment<a class="headerlink" href="#step-5-create-a-virtual-environment" title="Link to this heading"></a></h3>
+<p>Create a Python virtual environment inside your working directory to isolate your dependencies. Go back to your workspace directory first:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>..
+python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>jax-disk2D-venv
+</pre></div>
+</div>
+<p>Activate the virtual environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>jax-disk2D-venv/bin/activate
+</pre></div>
+</div>
+<p>After activation, your command prompt should change to show <code class="docutils literal notranslate"><span class="pre">(jax-disk2D-venv)</span></code> at the beginning, indicating that the virtual environment is active.</p>
+<p><strong>Important</strong>: You must activate this virtual environment every time you log in and want to use jax-disk2D.</p>
+<p>Return to the jax-disk2D repository directory:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>jax-disk2D
-pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
 </pre></div>
 </div>
 </section>
-<section id="mpi-support">
-<h2>MPI Support<a class="headerlink" href="#mpi-support" title="Link to this heading"></a></h2>
-<p>For netCDF4 support, you may need to install <code class="docutils literal notranslate"><span class="pre">mpi4py</span></code>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>mpi4py
+<section id="step-6-install-python-dependencies">
+<h3>Step 6: Install Python Dependencies<a class="headerlink" href="#step-6-install-python-dependencies" title="Link to this heading"></a></h3>
+<p>Install all required Python packages from the requirements file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
 </pre></div>
 </div>
-<p><strong>Note</strong>: On Compute Canada systems, do NOT install mpi4py via pip. It should be loaded via the module system instead.</p>
+<p>This will install JAX with CUDA 12 support, along with all other dependencies including:</p>
+<ul class="simple">
+<li><p>JAX and related packages (jaxlib, dm-haiku, optax)</p></li>
+<li><p>Scientific computing libraries (numpy, scipy, pandas)</p></li>
+<li><p>Data handling tools (xarray, netCDF4)</p></li>
+<li><p>Visualization tools (matplotlib, tensorboard)</p></li>
+<li><p>Guild AI for workflow management</p></li>
+</ul>
+<p><strong>Note</strong>: The installation may take 10-15 minutes depending on network speed. If you encounter any timeout errors, try running the command again.</p>
 </section>
-<section id="environment-variables">
-<h2>Environment Variables<a class="headerlink" href="#environment-variables" title="Link to this heading"></a></h2>
-<p>Set up the following environment variables:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">JAX_DISK2D_HOME</span><span class="o">=</span>&lt;path_to_jax-disk2D&gt;
-<span class="nb">export</span><span class="w"> </span><span class="nv">JAX_DISK2D_VENV</span><span class="o">=</span>&lt;path_to_virtual_venv&gt;
-<span class="nb">export</span><span class="w"> </span><span class="nv">JAX_DISK2D_GUILD_HOME</span><span class="o">=</span>&lt;path_to_guild_home&gt;
+<section id="step-7-install-mpi4py-via-module-system">
+<h3>Step 7: Install mpi4py via Module System<a class="headerlink" href="#step-7-install-mpi4py-via-module-system" title="Link to this heading"></a></h3>
+<p>For netCDF4 parallel I/O support, load mpi4py through the module system instead of pip:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module<span class="w"> </span>load<span class="w"> </span>mpi4py
+</pre></div>
+</div>
+<p><strong>Warning</strong>: Do NOT install mpi4py via pip on ComputeCanada systems. Using the module system ensures compatibility with the cluster’s MPI implementation.</p>
+</section>
+<section id="step-8-set-up-environment-variables">
+<h3>Step 8: Set Up Environment Variables<a class="headerlink" href="#step-8-set-up-environment-variables" title="Link to this heading"></a></h3>
+<p>Create a setup script to configure environment variables. This makes it easier to set up your environment in future sessions.</p>
+<p>First, create a directory for Guild AI data in your scratch space. Guild AI stores run data, logs, and artifacts which can grow large, so we place it in scratch storage. <strong>Note</strong>: On ComputeCanada, scratch directories are automatically cleaned every 60 days, so backup important results regularly:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="nv">$HOME</span>/scratch/guild-data
+</pre></div>
+</div>
+<p>Now create the environment setup script. Replace <code class="docutils literal notranslate"><span class="pre">&lt;workspace-dir&gt;</span></code> with the absolute path to your jax-disk2D workspace (e.g., <code class="docutils literal notranslate"><span class="pre">/project/&lt;project_id&gt;/&lt;username&gt;/&lt;jax-disk2D-workdir-name&gt;</span></code>):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">JAX_DISK2D_HOME</span><span class="o">=</span><span class="si">${</span><span class="nv">WORKSPACE_DIR</span><span class="si">}</span>/jax-disk2D
+<span class="nb">export</span><span class="w"> </span><span class="nv">JAX_DISK2D_VENV</span><span class="o">=</span><span class="si">${</span><span class="nv">WORKSPACE_DIR</span><span class="si">}</span>/jax-disk2D-venv
+<span class="nb">export</span><span class="w"> </span><span class="nv">JAX_DISK2D_GUILD_HOME</span><span class="o">=</span><span class="nv">$HOME</span>/scratch/guild-data
+<span class="nb">export</span><span class="w"> </span><span class="nv">GUILD_HOME</span><span class="o">=</span><span class="nv">$HOME</span>/scratch/guild-data
 </pre></div>
 </div>
 </section>
-<section id="guild-ai">
-<h2>Guild AI<a class="headerlink" href="#guild-ai" title="Link to this heading"></a></h2>
-<p>jax-disk2D uses <a class="reference external" href="https://my.guild.ai/t/guild-ai-documentation/64">Guild AI</a> for workflow management.
-Check <code class="docutils literal notranslate"><span class="pre">guild.yml</span></code> for more information on available operations.</p>
 </section>
-<section id="verifying-installation">
-<h2>Verifying Installation<a class="headerlink" href="#verifying-installation" title="Link to this heading"></a></h2>
-<p>After installation, you can verify that the package is working by running:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import jaxdisk2D; print(&#39;jax-disk2D installed successfully&#39;)&quot;</span>
-</pre></div>
-</div>
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading"></a></h2>
+<p>After successful installation, proceed to the <a class="reference internal" href="getting_started.html"><span class="doc">Getting Started</span></a> section to:</p>
+<ul class="simple">
+<li><p>Configure your first simulation</p></li>
+<li><p>Run training on compute nodes with GPU resources</p></li>
+<li><p>Download sample data (optional)</p></li>
+</ul>
 </section>
 </section>
 
