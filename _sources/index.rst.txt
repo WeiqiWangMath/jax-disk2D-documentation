@@ -11,8 +11,8 @@ Welcome to the jax-disk2D documentation! This package provides a Physics-Informe
    installation
    getting_started
    huggingface
-   test_results
    default_parameters
+   test_results
    project_structure
 
 Indices and tables

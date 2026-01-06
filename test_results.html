@@ -21,8 +21,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Default Parameters" href="default_parameters.html" />
-    <link rel="prev" title="Downloading Pre-computed Data" href="huggingface.html" /> 
+    <link rel="next" title="Project Structure" href="project_structure.html" />
+    <link rel="prev" title="Default Parameters" href="default_parameters.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -50,12 +50,12 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="huggingface.html">Downloading Pre-computed Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="default_parameters.html">Default Parameters</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Test Results</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#parameter-variations">Parameter Variations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#test-results-coming-soon">Test Results Coming Soon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#number-of-training-epochs">Number of Training Epochs</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="default_parameters.html">Default Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="project_structure.html">Project Structure</a></li>
 </ul>
 
@@ -89,14 +89,40 @@
 <section id="parameter-variations">
 <h2>Parameter Variations<a class="headerlink" href="#parameter-variations" title="Link to this heading"></a></h2>
 <p>The following tests explore how changing key parameters from the default configuration affects the PINN predictions. All tests use the same base setup unless otherwise specified. For the default parameter values, see <a class="reference internal" href="default_parameters.html"><span class="doc">Default Parameters</span></a>.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Videos on this page are synchronized. Click play on any video to start all videos in the same group simultaneously.</p>
-</div>
 </section>
-<section id="test-results-coming-soon">
-<h2>Test Results Coming Soon<a class="headerlink" href="#test-results-coming-soon" title="Link to this heading"></a></h2>
-<p>Detailed parameter variation tests and video comparisons will be added here.</p>
+<section id="number-of-training-epochs">
+<h2>Number of Training Epochs<a class="headerlink" href="#number-of-training-epochs" title="Link to this heading"></a></h2>
+<p>This comparison shows how the number of training epochs affects the quality of PINN predictions. The videos show surface density evolution with different training durations: 3.2 million epochs, 6.4 million epochs (default), 12.8 million epochs, and the FARGO3D reference solution. All other parameters remain at their default values.</p>
+<div class="video-group video-group-4">
+    <div class="video-item">
+        <video controls>
+            <source src="movies/a6b70ae0/dens-predict.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="video-caption">3.2M Epochs</div>
+    </div>
+    <div class="video-item">
+        <video controls>
+            <source src="movies/a123c105/dens-predict.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="video-caption">6.4M Epochs (Default)</div>
+    </div>
+    <div class="video-item">
+        <video controls>
+            <source src="movies/1f1dc333/dens-predict.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="video-caption">12.8M Epochs</div>
+    </div>
+    <div class="video-item">
+        <video controls>
+            <source src="movies/a123c105/dens-truth.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="video-caption">FARGO3D Reference</div>
+    </div>
+</div><p>All four videos play synchronously. The comparison demonstrates that the PINN converges to an accurate solution by 6.4 million epochs, with marginal improvements at 12.8 million epochs.</p>
 </section>
 </section>
 
@@ -104,8 +130,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="huggingface.html" class="btn btn-neutral float-left" title="Downloading Pre-computed Data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="default_parameters.html" class="btn btn-neutral float-right" title="Default Parameters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="default_parameters.html" class="btn btn-neutral float-left" title="Default Parameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="project_structure.html" class="btn btn-neutral float-right" title="Project Structure" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
