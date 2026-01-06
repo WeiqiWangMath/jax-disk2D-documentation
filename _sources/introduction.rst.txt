@@ -46,6 +46,7 @@ This documentation is organized to help you get started quickly and find detaile
 * **Installation**: Step-by-step guide for setting up jax-disk2D on computers with GPU, using ComputeCanada HPC clusters as an example
 * **Getting Started**: Complete workflow from running FARGO3D simulations through training PINN models to visualizing results
 * **Downloading Pre-computed Data**: Access pre-existing FARGO3D runs and trained PINN models from Hugging Face to skip lengthy simulations
+* **Test Results**: Visual comparisons showing how parameter variations affect PINN predictions
 * **Default Parameters**: Comprehensive reference for all FARGO3D simulation and PINN training parameters with detailed explanations
 * **Project Structure**: Overview of the repository organization with detailed descriptions of all modules and files
 
