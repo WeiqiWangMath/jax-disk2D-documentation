@@ -52,8 +52,10 @@
 <li class="toctree-l1"><a class="reference internal" href="huggingface.html">Downloading Pre-computed Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="default_parameters.html">Default Parameters</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Test Results</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#parameter-variations">Parameter Variations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pinn-vs-fargo3d-comparison">PINN vs FARGO3D Comparison</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#number-of-training-epochs">Number of Training Epochs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#effect-of-numerical-precision">Effect of Numerical Precision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#effect-of-domain-sampling-density">Effect of Domain Sampling Density</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="project_structure.html">Project Structure</a></li>
@@ -85,10 +87,34 @@
              
   <section id="test-results">
 <h1>Test Results<a class="headerlink" href="#test-results" title="Link to this heading"></a></h1>
-<p>This page presents comparisons of PINN predictions with varying parameters to demonstrate the model’s behavior under different configurations.</p>
-<section id="parameter-variations">
-<h2>Parameter Variations<a class="headerlink" href="#parameter-variations" title="Link to this heading"></a></h2>
-<p>The following tests explore how changing key parameters from the default configuration affects the PINN predictions. All tests use the same base setup unless otherwise specified. For the default parameter values, see <a class="reference internal" href="default_parameters.html"><span class="doc">Default Parameters</span></a>.</p>
+<p>This page presents comparisons of PINN predictions with varying parameters to demonstrate the model’s behavior under different configurations.
+The following tests explore how changing key parameters from the default configuration affects the PINN predictions. All tests use the same base setup unless otherwise specified. For the default parameter values, see <a class="reference internal" href="default_parameters.html"><span class="doc">Default Parameters</span></a>.</p>
+<section id="pinn-vs-fargo3d-comparison">
+<h2>PINN vs FARGO3D Comparison<a class="headerlink" href="#pinn-vs-fargo3d-comparison" title="Link to this heading"></a></h2>
+<p>This comparison directly shows the PINN prediction, FARGO3D reference solution, and the error between them. The PINN was trained with default parameters (6.4 million epochs, 32-bit precision).</p>
+<div class="video-group video-group-3">
+    <div class="video-item">
+        <video controls>
+            <source src="movies/a123c105/dens-predict.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="video-caption">PINN Prediction</div>
+    </div>
+    <div class="video-item">
+        <video controls>
+            <source src="movies/a123c105/dens-truth.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="video-caption">FARGO3D Reference</div>
+    </div>
+    <div class="video-item">
+        <video controls>
+            <source src="movies/a123c105/dens-error.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="video-caption">Error (PINN - FARGO3D)</div>
+    </div>
+</div><p>All three videos play synchronously. The error map demonstrates that the PINN achieves high accuracy in reproducing the FARGO3D solution.</p>
 </section>
 <section id="number-of-training-epochs">
 <h2>Number of Training Epochs<a class="headerlink" href="#number-of-training-epochs" title="Link to this heading"></a></h2>
@@ -123,6 +149,67 @@
         <div class="video-caption">FARGO3D Reference</div>
     </div>
 </div><p>All four videos play synchronously. The comparison demonstrates that the PINN converges to an accurate solution by 6.4 million epochs, with marginal improvements at 12.8 million epochs.</p>
+</section>
+<section id="effect-of-numerical-precision">
+<h2>Effect of Numerical Precision<a class="headerlink" href="#effect-of-numerical-precision" title="Link to this heading"></a></h2>
+<p>This comparison examines the impact of floating-point precision on PINN predictions. The videos show results using 32-bit precision (default), 64-bit precision, and the FARGO3D reference solution. Both models were trained for 6.4 million epochs with all other parameters kept at default values.</p>
+<div class="video-group video-group-3">
+    <div class="video-item">
+        <video controls>
+            <source src="movies/a123c105/dens-predict.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="video-caption">32-bit Precision (Default)</div>
+    </div>
+    <div class="video-item">
+        <video controls>
+            <source src="movies/a72e29f4/dens-predict.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="video-caption">64-bit Precision</div>
+    </div>
+    <div class="video-item">
+        <video controls>
+            <source src="movies/a123c105/dens-truth.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="video-caption">FARGO3D Reference</div>
+    </div>
+</div><p>All three videos play synchronously. The comparison shows that 64-bit precision takes longer to train but provides slightly better accuracy compared to 32-bit precision.</p>
+</section>
+<section id="effect-of-domain-sampling-density">
+<h2>Effect of Domain Sampling Density<a class="headerlink" href="#effect-of-domain-sampling-density" title="Link to this heading"></a></h2>
+<p>This comparison shows how the number of collocation points sampled in the spatiotemporal domain affects PINN predictions. The videos compare results using 5,000 domain samples, 10,000 samples (default), 20,000 samples, and the FARGO3D reference solution. All models were trained for 6.4 million epochs with other parameters at default values.</p>
+<div class="video-group video-group-4">
+    <div class="video-item">
+        <video controls>
+            <source src="movies/8567f228/dens-predict.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="video-caption">5,000 Samples</div>
+    </div>
+    <div class="video-item">
+        <video controls>
+            <source src="movies/a123c105/dens-predict.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="video-caption">10,000 Samples (Default)</div>
+    </div>
+    <div class="video-item">
+        <video controls>
+            <source src="movies/32a4fb47/dens-predict.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="video-caption">20,000 Samples</div>
+    </div>
+    <div class="video-item">
+        <video controls>
+            <source src="movies/a123c105/dens-truth.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="video-caption">FARGO3D Reference</div>
+    </div>
+</div><p>All four videos play synchronously. The comparison demonstrates that 10,000 domain samples provide a good balance between computational cost and accuracy, with marginal improvements at higher sampling densities.</p>
 </section>
 </section>
 
