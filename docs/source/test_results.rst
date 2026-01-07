@@ -1,11 +1,7 @@
 Test Results
 ============
 
-This page presents comparisons of PINN predictions with varying parameters to demonstrate the model's behavior under different configurations.
-
-Parameter Variations
---------------------
-
+This page presents comparisons of PINN predictions with varying parameters to demonstrate the model's behavior under different configurations. 
 The following tests explore how changing key parameters from the default configuration affects the PINN predictions. All tests use the same base setup unless otherwise specified. For the default parameter values, see :doc:`default_parameters`.
 
 Number of Training Epochs
@@ -47,3 +43,36 @@ This comparison shows how the number of training epochs affects the quality of P
    </div>
 
 All four videos play synchronously. The comparison demonstrates that the PINN converges to an accurate solution by 6.4 million epochs, with marginal improvements at 12.8 million epochs.
+
+Effect of Numerical Precision
+------------------------------
+
+This comparison examines the impact of floating-point precision on PINN predictions. The videos show results using 32-bit precision (default), 64-bit precision, and the FARGO3D reference solution. Both models were trained for 6.4 million epochs with all other parameters kept at default values.
+
+.. raw:: html
+
+   <div class="video-group video-group-3">
+       <div class="video-item">
+           <video controls>
+               <source src="movies/a123c105/dens-predict.mp4" type="video/mp4">
+               Your browser does not support the video tag.
+           </video>
+           <div class="video-caption">32-bit Precision (Default)</div>
+       </div>
+       <div class="video-item">
+           <video controls>
+               <source src="movies/a72e29f4/dens-predict.mp4" type="video/mp4">
+               Your browser does not support the video tag.
+           </video>
+           <div class="video-caption">64-bit Precision</div>
+       </div>
+       <div class="video-item">
+           <video controls>
+               <source src="movies/a123c105/dens-truth.mp4" type="video/mp4">
+               Your browser does not support the video tag.
+           </video>
+           <div class="video-caption">FARGO3D Reference</div>
+       </div>
+   </div>
+
+All three videos play synchronously. The comparison shows that 64-bit precision takes longer to train but provides slightly better accuracy compared to 32-bit precision.
