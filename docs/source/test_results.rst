@@ -148,4 +148,44 @@ This comparison shows how the number of collocation points sampled in the spatio
        </div>
    </div>
 
-All four videos play synchronously. The comparison demonstrates that 10,000 domain samples provide a good balance between computational cost and accuracy, with marginal improvements at higher sampling densities.
+All four videos play synchronously. The 5000 sample video shows lack of accuracy. The comparison demonstrates that 10,000 domain samples provide a good balance between computational cost and accuracy, with marginal improvements at higher sampling densities.
+
+Effect of Network Depth
+------------------------
+
+This comparison examines how the number of hidden layers in the MLP affects PINN predictions. The videos compare networks with 5, 9 (default), and 11 hidden layers, all with 32 neurons per layer, along with the FARGO3D reference solution. All models were trained for 6.4 million epochs with other parameters at default values.
+
+.. raw:: html
+
+   <div class="video-group video-group-4">
+       <div class="video-item">
+           <video controls>
+               <source src="movies/cdf7e72a/dens-predict.mp4" type="video/mp4">
+               Your browser does not support the video tag.
+           </video>
+           <div class="video-caption">5 Layers</div>
+       </div>
+       <div class="video-item">
+           <video controls>
+               <source src="movies/a123c105/dens-predict.mp4" type="video/mp4">
+               Your browser does not support the video tag.
+           </video>
+           <div class="video-caption">9 Layers (Default)</div>
+       </div>
+       <div class="video-item">
+           <video controls>
+               <source src="movies/ef971b06/dens-predict.mp4" type="video/mp4">
+               Your browser does not support the video tag.
+           </video>
+           <div class="video-caption">11 Layers</div>
+       </div>
+       <div class="video-item">
+           <video controls>
+               <source src="movies/a123c105/dens-truth.mp4" type="video/mp4">
+               Your browser does not support the video tag.
+           </video>
+           <div class="video-caption">FARGO3D Reference</div>
+       </div>
+   </div>
+
+All four videos play synchronously. The comparison shows that 5 layers provide the worst accuracy, while 9 and 11 layers show no significant difference in performance. Therefore, 9 layers are used as the default to balance accuracy and computational efficiency.
