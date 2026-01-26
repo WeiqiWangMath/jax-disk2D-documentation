@@ -72,7 +72,7 @@ Output Control Parameters
 
 * **Ninterm** (``5``): Number of intermediate time steps between outputs.
 
-* **Ntot** (``100``): Total number of output snapshots to produce.
+* **Ntot** (``200``): Total number of output snapshots to produce.
 
 * **OutputDir** (``@outputs``): Directory for storing FARGO3D output files. The ``@`` symbol indicates a path relative to the run directory.
 

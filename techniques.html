@@ -1,0 +1,167 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Techniques &mdash; jax-disk2D 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/sync_videos.css?v=2293ad74" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="_static/sync_videos.js?v=71b0c0f2"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Project Structure" href="project_structure.html" />
+    <link rel="prev" title="Test Results" href="test_results.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            jax-disk2D
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="huggingface.html">Downloading Pre-computed Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="default_parameters.html">Default Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_results.html">Test Results</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Techniques</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#sampling-strategies">Sampling Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#frame-angular-velocity">Frame Angular Velocity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#time-stepping-oriented-neural-network-tsonn">Time-Stepping-Oriented Neural Network (TSONN)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#enforcing-periodic-boundary-conditions">Enforcing Periodic Boundary Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#time-marching-error-accumulation">Time-Marching Error Accumulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#radial-boundary-conditions">Radial Boundary Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#equation-form-reformulation">Equation Form Reformulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#numerical-precision">Numerical Precision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#memory-considerations">Memory Considerations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="project_structure.html">Project Structure</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">jax-disk2D</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Techniques</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/techniques.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="techniques">
+<h1>Techniques<a class="headerlink" href="#techniques" title="Link to this heading"></a></h1>
+<p>This page discusses the various techniques we explored during the development of this PINN framework.</p>
+<section id="sampling-strategies">
+<h2>Sampling Strategies<a class="headerlink" href="#sampling-strategies" title="Link to this heading"></a></h2>
+<p>We tested planet-focused and spiral arm sampling strategies, which were designed based on empirical fitting to the solution, to concentrate collocation points in regions of interest, such as near the planet location and along the spiral density wave structures. However, these adaptive sampling methods showed no significant improvement in the final accuracy compared to uniform random sampling. Therefore, we kept uniform random sampling in polar coordinates over the domain <span class="math notranslate nohighlight">\([r_{\text{min}}, r_{\text{max}}] \times [-\pi, \pi] \times [t_{\text{min}}, t_{\text{max}}]\)</span> as the default approach due to its simplicity and comparable performance. Other potential sampling strategies, such as spatiotemporal adaptive sampling and wave front sampling, were not tested.</p>
+</section>
+<section id="frame-angular-velocity">
+<h2>Frame Angular Velocity<a class="headerlink" href="#frame-angular-velocity" title="Link to this heading"></a></h2>
+<p>The frame angular velocity <span class="math notranslate nohighlight">\(\Omega_{\text{frame}}\)</span> used in the rotating reference frame is derived from Kepler’s third law. For a corotating frame with the planet, the angular velocity is <span class="math notranslate nohighlight">\(\Omega_{\text{frame}} = \sqrt{G(M_* + m_p)/r_p^3} = \sqrt{1 + 10^{-5}} \approx 1.000005\)</span> in FARGO3D units, where <span class="math notranslate nohighlight">\(M_*\)</span> is the stellar mass, <span class="math notranslate nohighlight">\(m_p\)</span> is the planet mass, and <span class="math notranslate nohighlight">\(r_p\)</span> is the planet orbital radius. This formulation correctly accounts for the gravitational influence of both the star and the planet, ensuring consistency between the PINN governing equations and the FARGO3D reference simulations.</p>
+</section>
+<section id="time-stepping-oriented-neural-network-tsonn">
+<h2>Time-Stepping-Oriented Neural Network (TSONN)<a class="headerlink" href="#time-stepping-oriented-neural-network-tsonn" title="Link to this heading"></a></h2>
+<p>We considered the Time-Stepping-Oriented Neural Network (TSONN) approach proposed by <a class="reference external" href="https://arxiv.org/abs/2310.16491">Cao and Zhang (2023)</a>, which integrates time-stepping methods with deep learning to transform the ill-conditioned optimization problem into a series of well-conditioned sub-problems over pseudo time intervals. While this method shows promise for improving training stability in time-dependent PDEs, our initial consideration raised the question: if we are incorporating time-stepping methods into the neural network framework, why not directly use traditional numerical methods? Nevertheless, TSONN represents a potentially feasible approach to make PINNs work more effectively for time-dependent problems, and it could be worth exploring in future work for challenging scenarios where standard PINNs struggle with training convergence.</p>
+</section>
+<section id="enforcing-periodic-boundary-conditions">
+<h2>Enforcing Periodic Boundary Conditions<a class="headerlink" href="#enforcing-periodic-boundary-conditions" title="Link to this heading"></a></h2>
+<p>We tested the method proposed by <a class="reference external" href="https://doi.org/10.1016/j.jcp.2021.110242">Dong and Ni (2021)</a> for exactly enforcing periodic boundary conditions with deep neural networks. This method represents a different approach compared to our standard implementation of periodic boundary conditions. It constructs specialized periodic layers that automatically satisfy periodicity requirements for the function and its derivatives to machine precision. We suspected that our construction for imposing periodic boundary conditions might cause some issues in the training process, and we explored this alternative method to see if it could address potential problems. However, in our implementation and testing, this approach did not improve the performance of our PINN solver for the disk hydrodynamics problem. We ultimately found that our standard methods for handling periodic boundary conditions were sufficient for our application.</p>
+</section>
+<section id="time-marching-error-accumulation">
+<h2>Time-Marching Error Accumulation<a class="headerlink" href="#time-marching-error-accumulation" title="Link to this heading"></a></h2>
+<p>We examined the error accumulation behavior of the time-marching strategy as a function of time for different numbers of time folds. Our analysis shows that the error increases approximately linearly during the first few orbital periods, then reaches a plateau and remains relatively flat for the remainder of the simulation. This behavior is consistent across different time-marching configurations, with similar error evolution patterns observed for both 16 and 32 time folds. This suggests that the error accumulation in the time-marching approach is not strongly sensitive to the number of folds once a sufficient number is used, and that the dominant error contribution occurs during the initial propagation phase.</p>
+</section>
+<section id="radial-boundary-conditions">
+<h2>Radial Boundary Conditions<a class="headerlink" href="#radial-boundary-conditions" title="Link to this heading"></a></h2>
+<p>An important finding in our work concerns the treatment of radial boundary conditions. In our initial implementation, we imposed boundary conditions at the inner and outer radial boundaries to match the FARGO reference simulations. However, through careful analysis of the PINN solution, we observed that while the solution evolved correctly during the first few orbital periods, the density waves generated by the planet stopped propagating away from the planet location after approximately 4-5 orbits. This premature cessation of wave propagation was inconsistent with the expected physical behavior. After removing the radial boundary conditions and allowing the PINN to solve the governing equations without explicit boundary constraints at <span class="math notranslate nohighlight">\(r_{\text{min}}\)</span> and <span class="math notranslate nohighlight">\(r_{\text{max}}\)</span>, the waves were able to propagate correctly and reach the domain boundaries as expected. This finding suggests that for this particular problem, the boundary conditions may have been over-constraining the solution and preventing the PINN from capturing the correct wave dynamics.</p>
+</section>
+<section id="equation-form-reformulation">
+<h2>Equation Form Reformulation<a class="headerlink" href="#equation-form-reformulation" title="Link to this heading"></a></h2>
+<p>Some research has shown that changing the form of governing equations can provide advantages in PINN training. For example, <a class="reference external" href="https://doi.org/10.1016/j.cma.2020.113547">Kharazmi et al. (2021)</a> demonstrated that using variational formulations and integration by parts can reduce the order of differential operators and improve training efficiency, particularly for problems with rough solutions or singularities. We considered exploring different equation formulations for our disk hydrodynamics problem. However, the governing equations (continuity, momentum, and energy equations in rotating coordinates) are already quite complex, involving multiple nonlinear terms and coupling between variables. Reformulating these equations would make verification of correctness challenging, and without clear evidence about which direction would be beneficial for our specific problem, we decided not to pursue this path. We retained the standard strong-form PDEs in our implementation.</p>
+</section>
+<section id="numerical-precision">
+<h2>Numerical Precision<a class="headerlink" href="#numerical-precision" title="Link to this heading"></a></h2>
+<p>Many research studies indicate that double precision (64-bit) can largely improve the accuracy of PINNs, particularly for problems requiring high-order derivative computations. However, in our case, while 64-bit precision does provide some improvement over 32-bit precision, the enhancement is only limited. As shown in the test results comparing 32-bit and 64-bit precision (see <a class="reference internal" href="test_results.html"><span class="doc">Test Results</span></a>), the accuracy gains are modest and come at the cost of significantly longer training times and increased memory usage. We therefore use 32-bit precision as the default configuration, which provides a good balance between computational efficiency and solution accuracy for this disk hydrodynamics application.</p>
+</section>
+<section id="memory-considerations">
+<h2>Memory Considerations<a class="headerlink" href="#memory-considerations" title="Link to this heading"></a></h2>
+<p>When running <code class="docutils literal notranslate"><span class="pre">pinn:train</span></code>, users should be aware that the test function called at the end of training is memory-intensive. This function loads the full test dataset and generates predictions on the entire spatiotemporal grid, which requires substantial memory allocation. Although the current version includes optimizations to reduce memory usage, the operation still requires considerable memory resources. We recommend using at least 64GB of RAM when running training jobs to avoid out-of-memory errors, especially for large-scale simulations with fine spatial and temporal resolution.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="test_results.html" class="btn btn-neutral float-left" title="Test Results" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="project_structure.html" class="btn btn-neutral float-right" title="Project Structure" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Shunyuan Mao, Weiqi Wang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

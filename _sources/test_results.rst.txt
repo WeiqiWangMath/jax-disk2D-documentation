@@ -335,3 +335,8 @@ This comparison examines how different activation functions affect PINN predicti
    </div>
 
 All four videos play synchronously. The comparison demonstrates that the stan activation function performs better than tanh and sin for this disk hydrodynamics scenario.
+
+Effect of Output Scaling
+-------------------------
+
+(To be added)
