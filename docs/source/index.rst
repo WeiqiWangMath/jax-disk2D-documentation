@@ -13,6 +13,7 @@ Welcome to the jax-disk2D documentation! This package provides a Physics-Informe
    huggingface
    default_parameters
    test_results
+   techniques
    project_structure
 
 Indices and tables
