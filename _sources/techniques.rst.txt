@@ -21,7 +21,7 @@ We considered the Time-Stepping-Oriented Neural Network (TSONN) approach propose
 Causal Training
 ---------------
 
-We tested the causal training approach proposed by `Wang et al. (2022) <https://arxiv.org/abs/2203.07404>`_, which emphasizes respecting the spatio-temporal causal structure in time-dependent PDEs. This method prioritizes achieving better accuracy at earlier times before progressively training on later time steps, following the physical causality of the system evolution. This is a well-motivated approach that has been shown to work effectively for many time-dependent problems, including chaotic and turbulent systems. We implemented this method and experimented with different values for key parameters including ``causal_training_epsilon`` (which controls the temporal window size) and ``causal_stopping_criterion`` (which determines when to advance to the next temporal window). However, despite tuning these parameters across various configurations, the causal training approach did not improve results for our disk hydrodynamics equations. The reasons for this failure are not entirely clear, but it suggests that our specific problem may have characteristics that do not align well with the assumptions underlying causal training methods.
+We tested the causal training approach proposed by `Wang et al. (2022) <https://arxiv.org/abs/2203.07404>`_, which emphasizes respecting the spatio-temporal causal structure in time-dependent PDEs. This method prioritizes achieving better accuracy at earlier times before progressively training on later time steps, following the physical causality of the system evolution. This is a well-motivated approach that has been shown to work effectively for many time-dependent problems, including chaotic and turbulent systems. We implemented this method and experimented with different values for key parameters including ``causal_training_epsilon`` (which controls the temporal window size), ``causal_stopping_criterion`` (which determines when to advance to the next temporal window), and ``causal_weight`` (which balances the contribution of causal loss terms). However, despite extensive tuning of these parameters across various configurations, including different causal weight values, the causal training approach did not improve results for our disk hydrodynamics equations. The reasons for this failure are not entirely clear, but it suggests that our specific problem may have characteristics that do not align well with the assumptions underlying causal training methods.
 
 Enforcing Periodic Boundary Conditions
 ---------------------------------------
@@ -48,6 +48,11 @@ Training with Larger Domain
 
 We experimented with training the PINN on a larger radial domain to assess whether the model could generalize to a wider spatial extent. However, the results showed significant degradation in accuracy compared to the reference solution, particularly in the outer region where :math:`2.5 < r < 4.0`. The PINN struggled to reproduce the correct solution structure in this extended domain. This suggests that the increased complexity of the solution over a larger domain poses challenges for the neural network to learn effectively. The network capacity and training procedure that worked well for the standard domain were insufficient for capturing the more complex dynamics present in the extended region. This highlights a limitation of PINNs when dealing with spatially extended problems where solution complexity grows with domain size.
 
+Domain Exclusion of Planet Location
+------------------------------------
+
+We explored whether excluding the planet location at :math:`r = 1` from the computational domain could improve accuracy. The motivation was that the planet introduces a localized perturbation or potential singularity in the disk, and excluding this region might allow the PINN to better learn the smooth disk dynamics elsewhere. However, this approach proved unsuccessful. When the domain did not include the planet location, the PINN lost essential information about the planet's gravitational influence, which is crucial for generating the density waves and spiral structures that propagate through the disk. Interestingly, we also tested training on a narrowed domain centered around the planet, such as :math:`0.8 < r < 1.2`. In this configuration, the PINN remained robust and successfully approximated the correct solution. This suggests that while the planet must be included in the domain, the PINN can still work effectively on smaller spatial regions as long as the key physical source (the planet) is present. The contrast between these two approaches demonstrates that the planet's inclusion is necessary for the PINN to capture the correct dynamics driven by planet-disk interactions.
+
 Damping in FARGO Simulations
 -----------------------------
 
@@ -57,6 +62,11 @@ Equation Form Reformulation
 ---------------------------
 
 Some research has shown that changing the form of governing equations can provide advantages in PINN training. For example, `Kharazmi et al. (2021) <https://doi.org/10.1016/j.cma.2020.113547>`_ demonstrated that using variational formulations and integration by parts can reduce the order of differential operators and improve training efficiency, particularly for problems with rough solutions or singularities. We considered exploring different equation formulations for our disk hydrodynamics problem. However, the governing equations (continuity, momentum, and energy equations in rotating coordinates) are already quite complex, involving multiple nonlinear terms and coupling between variables. Reformulating these equations would make verification of correctness challenging, and without clear evidence about which direction would be beneficial for our specific problem, we decided not to pursue this path. We retained the standard strong-form PDEs in our implementation.
+
+Separating Dominant PDE Terms
+------------------------------
+
+We investigated whether it was possible to isolate specific PDE terms that dominate different physical effects, such as wave propagation and gap opening in the disk. Our approach involved analyzing all individual terms in the governing equations to identify which terms primarily contribute to each physical phenomenon. However, this analysis revealed that such a clean separation does not exist in our problem. The physical effects emerge from the collective behavior of multiple large terms that partially cancel each other out, rather than being governed by a single dominant term or a small subset of terms. This finding indicates that the wave and gap formation processes are intrinsically coupled through the complex interplay of multiple PDE terms, making it impractical to simplify the training by focusing on isolated term contributions.
 
 Numerical Precision
 -------------------
@@ -78,10 +88,20 @@ Parallel Networks for Multiple Outputs
 
 Inspired by the DeepONet architecture (`Lu et al., 2021 <https://doi.org/10.1038/s42256-021-00302-5>`_), we tested a parallel network approach where each physical quantity (:math:`\Sigma`, :math:`v_r`, :math:`v_\theta`) is predicted by a separate neural network. The motivation was to eliminate potential interference between different output variables during training, allowing each network to specialize in learning its respective quantity independently. However, the results from this parallel network configuration were not promising and did not show improvement over the standard single network approach that predicts all three quantities simultaneously. We therefore retained the unified network architecture where all outputs share the same network parameters.
 
+Separable PINN
+--------------
+
+We tested the Separable Physics-Informed Neural Network (SPINN) approach proposed by `Cho et al. (2023) <https://arxiv.org/abs/2306.15969>`_, which operates on a per-axis basis to reduce the number of network propagations in multi-dimensional PDEs. The paper reports significant speedups (up to 62x in wall-clock time) and improved accuracy for various benchmark problems. However, our implementation and testing showed that SPINN does not work well for our disk hydrodynamics problem. The observed speedup was only 2-3x rather than the 10x or higher reported in the paper, and more critically, the separable architecture failed to find the correct solution. This suggests that the separability assumptions underlying SPINN may not be appropriate for our coupled, nonlinear system where the physical quantities have strong interdependencies across spatial dimensions. We retained the standard PINN architecture for our work.
+
 Robustness Across Physical Parameters
 --------------------------------------
 
 We extensively tested the robustness of our PINN framework across different physical parameter configurations, specifically varying the planet mass and disk aspect ratio. We evaluated the model on combinations of planet masses :math:`m_p \in \{10^{-3}, 10^{-4}, 10^{-5}\}` (in units of stellar mass) and aspect ratios :math:`h \in \{0.05, 0.1, 0.15\}`. Our results demonstrate that the PINN is robust across these parameter variations, consistently producing solutions that closely approximate the FARGO3D reference solutions. This finding indicates that the PINN architecture and training approach we developed can reliably capture the underlying physics of planet-disk interactions across a range of physically relevant parameter regimes, rather than being limited to a single narrow configuration.
+
+L-BFGS Optimizer
+----------------
+
+We have not fully tested the L-BFGS optimizer due to its heavy computational cost. L-BFGS is a quasi-Newton method that is commonly used in PINN training and can potentially achieve better convergence than first-order methods like Adam. However, it requires storing and manipulating approximations to the Hessian matrix, which becomes computationally expensive for our problem size. A potentially promising approach would be to use L-BFGS for the initial training phase to quickly reach a good solution, followed by Adam optimizer for fine-tuning. This hybrid strategy could combine the fast convergence properties of L-BFGS with the efficiency and stability of Adam. Future work could explore this two-stage optimization approach to assess whether it provides computational benefits for our disk hydrodynamics problem.
 
 Memory Considerations
 ---------------------
